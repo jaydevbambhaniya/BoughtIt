@@ -1,0 +1,35 @@
+<!-- <script src="https://accounts.google.com/gsi/client" async></script> -->
+<div class="login-container">
+    <div class="login-left">
+        <img src="assets/icons/BoughtIt.ico" alt="BoughtIt logo" class="logo">
+        <button class="btn btn-google" mat-raised-button (click)="googleLogin()">
+          Sign in with Google
+        </button>
+      <button class="btn btn-apple" (click)="facebookLogin()">Sign in with Facebook</button>
+      <p>or Login with Email</p>
+      <app-loading-spinner #loadingSpinner></app-loading-spinner>
+      <form method="post" [formGroup]="loginForm" (ngSubmit)="onLoginClick()">
+        <p *ngIf="alert" style="color: red;text-align: center;">{{alert}}</p>
+        <label for="email">Email</label>
+        <input type="email" formControlName="email" required="required" id="email" name="username" placeholder="Email">
+        <div *ngIf="loginForm.invalid">
+          <small *ngIf="loginForm.get('email')?.errors?.['required'] && loginForm.get('email')?.touched" style="color: red;">Email is required</small>
+          <small *ngIf="loginForm.get('email')?.errors?.['email'] && loginForm.get('email')?.touched" style="color: red;">Please enter a valid email</small>
+          </div>
+        <label for="password">Password</label>
+        <input type="password" formControlName="password" required="required" id="password" name="password" placeholder="Password">
+        <div *ngIf="loginForm.invalid">
+          <small *ngIf="loginForm.get('password')?.errors?.['required'] && loginForm.get('password')?.touched" style="color: red;">Password is required</small>
+         </div>
+        <button type="submit" [disabled]="this.loginForm.invalid" class="btn btn-signin">Sign In</button>
+      </form>
+      <p>Don't have an account? <a href="/register">Sign Up Now</a></p>
+    </div>
+    <div class="login-right">
+      <div class="login-content">
+            <h1>Welcome to BoughtIt – where shopping meets simplicity!</h1>
+            <p>Log in now to discover exclusive deals, fast delivery, and a seamless shopping experience like never before. Your favorite products are just a click away!</p>
+            <img src="assets/images/logindashboard.jpg" alt="Happy customers shopping" class="login-image">
+        </div>
+    </div>
+  </div>

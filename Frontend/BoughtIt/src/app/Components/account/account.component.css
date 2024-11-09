@@ -1,0 +1,113 @@
+/* Container for the entire user account page */
+.user-account-container {
+    width: 90%;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px 30px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-left: 8px solid #007bff;
+  }
+  
+  /* Header styling */
+  .header {
+    text-align: center;
+    font-size: 2.2em;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Form container */
+  .form-container {
+    padding: 20px 10px;
+  }
+  
+  /* Section styling */
+  .section {
+    margin-bottom: 30px;
+    background: #f9f9f9;
+    padding: 15px 20px;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+  }
+  
+  /* Section headers */
+  .section h2 {
+    font-size: 1.4em;
+    margin-bottom: 20px;
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+  }
+  
+  /* Form group container */
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+  
+  /* Form labels */
+  .form-group label {
+    font-size: 1em;
+    margin-bottom: 8px;
+    color: #555;
+  }
+  
+  /* Input fields */
+  .form-group input,
+  .form-group select {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+  }
+  
+  /* Dropdown menu styling */
+  .form-group select {
+    background-color: #ffffff;
+    color: #333;
+  }
+  
+  /* Input and select focus effect */
+  .form-group input:focus,
+  .form-group select:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  /* Submit button */
+  .btn-submit {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 1.2em;
+    text-align: center;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  /* Submit button hover effect */
+  .btn-submit:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .user-account-container {
+      width: 95%;
+    }
+    .header {
+      font-size: 1.8em;
+    }
+    .section h2 {
+      font-size: 1.2em;
+    }
+  }
+  

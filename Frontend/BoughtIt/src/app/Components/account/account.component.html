@@ -1,0 +1,98 @@
+<app-loading-spinner [isLoading]="this.isLoading"></app-loading-spinner>
+<app-alert #messageBox></app-alert>
+<div class="user-account-container">
+    <!-- Header Section -->
+    <h1 class="header">Edit Account Information</h1>
+  
+    <!-- User Information Form -->
+    <div class="form-container">
+        <!-- Personal Information Section -->
+        <div class="section">
+          
+      <form [formGroup]="userForm" (submit)="this.updateUser();">
+          <h2>Personal Information</h2>
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" formControlName="firstName" placeholder="Enter your first name" />
+            <div *ngIf="userForm.invalid">
+                <small *ngIf="userForm.get('firstName')?.errors?.['required'] && userForm.get('firstName')?.touched" style="color: red;">Firstname is required</small>
+                </div>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" formControlName="lastName" placeholder="Enter your last name" />
+            <div *ngIf="userForm.invalid">
+                <small *ngIf="userForm.get('lastName')?.errors?.['required'] && userForm.get('lastName')?.touched" style="color: red;">Lastname is required</small>
+                </div>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" formControlName="email" placeholder="Enter your email" />
+            <div *ngIf="userForm.invalid">
+                <small *ngIf="userForm.get('email')?.errors?.['required'] && userForm.get('email')?.touched" style="color: red;">Email is required</small>
+                </div>
+          </div>
+          <div class="form-group">
+            <label for="phoneNumber">Phone Number</label>
+            <input type="tel" id="phoneNumber" formControlName="phoneNumber" placeholder="Enter your phone number" />
+            <div *ngIf="userForm.invalid">
+                <small *ngIf="userForm.get('phoneNumber')?.errors?.['required'] && userForm.get('phoneNumber')?.touched" style="color: red;">Phone Number is required</small>
+                </div>
+          </div>
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <select id="gender" formControlName="gender">
+              <option value="" disabled selected>Select your gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+            <div *ngIf="userForm.invalid">
+                <small *ngIf="userForm.get('gender')?.errors?.['required'] && userForm.get('gender')?.touched" style="color: red;">Gender is required</small>
+                </div>
+          </div>
+          <button type="submit" class="btn-submit" [disabled]="userForm.invalid">Save Changes</button>
+          </form>
+        </div>
+  
+        <!-- Account Settings Section -->
+        <div class="section">
+          <form method="post" [formGroup]="userPasswordForm" (submit)="updateUserPassword();">
+          <h2>Account Settings</h2>
+          <div class="form-group">
+            <label for="password">Old Password</label>
+            <input type="password" formControlName="oldPassword" id="oldPassword" placeholder="Enter current password" />
+            <div *ngIf="userPasswordForm.invalid">
+              <small *ngIf="userPasswordForm.get('oldPassword')?.errors?.['required'] && userPasswordForm.get('oldPassword')?.touched" style="color: red;">Old Password is required</small>
+              </div>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" formControlName="newPassword" id="password" placeholder="Enter new password" />
+            <div *ngIf="userPasswordForm.get('newPassword')?.errors && userPasswordForm.get('newPassword')?.touched">
+              <small *ngIf="userPasswordForm.get('newPassword')?.errors?.['required']" style="color: red;">Password is required</small>
+              <div *ngIf="userPasswordForm.get('newPassword')?.errors?.['passwordRequirements']">
+              <small *ngIf="!userPasswordForm.get('newPassword')?.errors?.['passwordRequirements']?.hasDigit" style="color: red;">Password must contain at least one digit.<br></small>
+              <small *ngIf="!userPasswordForm.get('newPassword')?.errors?.['passwordRequirements']?.hasLowerCase" style="color: red;">Password must contain at least one lowercase letter.<br></small>
+              <small *ngIf="!userPasswordForm.get('newPassword')?.errors?.['passwordRequirements']?.hasUpperCase" style="color: red;">Password must contain at least one uppercase letter.<br></small>
+              <small *ngIf="!userPasswordForm.get('newPassword')?.errors?.['passwordRequirements']?.hasNonAlphanumeric" style="color: red;">Password must contain at least one non-alphanumeric character.<br></small>
+              <small *ngIf="!userPasswordForm.get('newPassword')?.errors?.['passwordRequirements']?.hasMinLength" style="color: red;">Password must be at least 6 characters long.</small>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" formControlName="confirmPassword" id="confirmPassword" placeholder="Confirm new password" />
+            <div *ngIf="(userPasswordForm.get('confirmPassword')?.errors || userPasswordForm.errors) && userPasswordForm.get('confirmPassword')?.touched">
+              <small *ngIf="userPasswordForm.get('confirmPassword')?.errors?.['required']" style="color: red;">Confirm Password is required<br/></small>
+              <small *ngIf="userPasswordForm.errors?.['passwordMismatch']" style="color: red;">Confirm password must be same as password.</small>
+            </div>
+          </div>
+  
+          <!-- Submit Button -->
+          <button type="submit" class="btn-submit" [disabled]="userPasswordForm.invalid">Change Password</button>
+        </form>
+        </div>
+    </div>
+  </div>
+  
