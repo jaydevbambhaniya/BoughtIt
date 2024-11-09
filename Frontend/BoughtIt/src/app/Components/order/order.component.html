@@ -1,0 +1,194 @@
+<app-alert #messageBox></app-alert>
+<app-loading-spinner [isLoading]="isLoading"></app-loading-spinner>
+<div class="container">
+    <h1>Order Summary</h1>
+    <form method="post" [formGroup]="orderForm" (submit)="onPlaceOrderClick()">
+        <div class="section product-section">
+            <div class="order-header">
+                <h2>Products:</h2>
+                    <button type="button" class="btn btn-primary" [routerLink]="['/cart']">
+                        <span class="glyphicon glyphicon-share-alt"></span> Modify Products
+                    </button>
+            </div>
+            <div class="table-container">
+                <table class="order-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let product of products">
+                            <td>
+                                <div class="product-info">
+                                    <img class="product-img" [src]="this.fileBaseUrl+product.fileName" alt="Product Image">
+                                    <span class="product-name">{{ product.name }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="quantity-control">{{ product.quantity }}</span>
+                            </td>
+                            <td>
+                                <span class="price">{{ product.price }}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="total">Total: {{getTotal()}}</div>
+        </div>
+
+        <!-- Personal Information Section -->
+        <div class="section personal-info-section">
+            <h2>Receiver Information</h2>
+            <div class="form-group">
+                <div class="left">
+                    <label for="firstname">First Name</label>
+                </div>
+                <div class="right">
+                    <input type="text" id="firstname" formControlName="firstname" name="firstname">
+                    <div *ngIf="orderForm.invalid">
+                        <small
+                            *ngIf="orderForm.get('firstname')?.errors?.['required'] && orderForm.get('firstname')?.touched"
+                            style="color: red;">Firstname is required</small>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="left">
+                    <label for="lastname">Last Name</label>
+                </div>
+                <div class="right">
+                    <input type="text" id="lastname" formControlName="lastname" name="lastname">
+                    <div *ngIf="orderForm.invalid">
+                        <small
+                            *ngIf="orderForm.get('lastname')?.errors?.['required'] && orderForm.get('lastname')?.touched"
+                            style="color: red;">Lastname is required</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Section -->
+        <div class="section email-section">
+            <h2>Contact Information</h2>
+            <div class="form-group">
+                <div class="left">
+                    <label for="email">Email</label>
+                </div>
+                <div class="right">
+                    <input type="email" id="email" formControlName="email" name="email">
+                    <div *ngIf="orderForm.invalid">
+                        <small *ngIf="orderForm.get('email')?.errors?.['required'] && orderForm.get('email')?.touched"
+                            style="color: red;">Email is required</small>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="left">
+                    <label for="phone">Phone</label>
+                </div>
+                <div class="right">
+                    <input type="tel" id="phone" formControlName="phone" name="phone">
+                    <div *ngIf="orderForm.invalid">
+                        <small *ngIf="orderForm.get('phone')?.errors?.['required'] && orderForm.get('phone')?.touched"
+                            style="color: red;">Phone number is required</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shipping Address Section -->
+        <div class="section shipping-section">
+            <h2>Shipping Address</h2>
+            <div class="form-group">
+                <div class="left">
+                    <label for="addressLine1">Address Line 1</label>
+                </div>
+                <div class="right">
+                    <input type="text" id="addressLine1" formControlName="addressLine1" name="addressLine1">
+                    <div *ngIf="orderForm.invalid">
+                        <small *ngIf="orderForm.get('addressLine1')?.errors?.['required'] && orderForm.get('addressLine1')?.touched"
+                            style="color: red;">Address Line 1 is required</small>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="left">
+                    <label for="addressLine2">Address Line 2</label>
+                </div>
+                <div class="right">
+                    <input type="text" id="address2" formControlName="addressLine2" name="addressLine2">
+                    <div *ngIf="orderForm.invalid">
+                        <small *ngIf="orderForm.get('addressLine2')?.errors?.['required'] && orderForm.get('addressLine2')?.touched"
+                            style="color: red;">Address Line 2 is required</small>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="left">
+                    <label for="city">City</label>
+                </div>
+                <div class="right">
+                    <input type="text" id="city" formControlName="city" name="city">
+                    <div *ngIf="orderForm.invalid">
+                        <small *ngIf="orderForm.get('city')?.errors?.['required'] && orderForm.get('city')?.touched"
+                            style="color: red;">City is required</small>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="left">
+                    <label for="district">District</label>
+                </div>
+                <div class="right">
+                    <input type="text" id="district" formControlName="district" name="district">
+                    <div *ngIf="orderForm.invalid">
+                        <small *ngIf="orderForm.get('district')?.errors?.['required'] && orderForm.get('district')?.touched"
+                            style="color: red;">District is required</small>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="left">
+                    <label for="state">State/Province</label>
+                </div>
+                <div class="right">
+                    <input type="text" id="state" formControlName="state" name="state">
+                    <div *ngIf="orderForm.invalid">
+                        <small *ngIf="orderForm.get('state')?.errors?.['required'] && orderForm.get('state')?.touched"
+                            style="color: red;">State is required</small>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="left">
+                    <label for="zipcode">Zip Code</label>
+                </div>
+                <div class="right">
+                    <input type="text" id="zipcode" formControlName="zipcode" name="zipcode">
+                    <div *ngIf="orderForm.invalid">
+                        <small
+                            *ngIf="orderForm.get('zipcode')?.errors?.['required'] && orderForm.get('zipcode')?.touched"
+                            style="color: red;">ZipCode is required</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agreement Checkbox -->
+        <div class="agreement">
+            <input type="checkbox" id="agreement" formControlName="agreement" name="agreement">
+            <label for="agreement">I agree to Terms of Service and Privacy Policy.</label>
+            <div *ngIf="orderForm.invalid">
+                <small *ngIf="orderForm.get('agreement')?.errors?.['required'] && orderForm.get('agreement')?.touched"
+                    style="color: red;"> &nbsp;&nbsp;&nbsp; - Please check this checkbox.</small>
+            </div>
+        </div>
+        <button class="button" type="submit" [disabled]="this.orderForm.invalid">Place Order</button>
+    </form>
+</div>

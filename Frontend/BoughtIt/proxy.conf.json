@@ -1,0 +1,9 @@
+{
+    "/.well-known": {
+      "target": "https://accounts.google.com",
+      "secure": true,
+      "changeOrigin": true,
+      "logLevel": "debug"
+    }
+  }
+  

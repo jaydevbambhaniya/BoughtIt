@@ -1,0 +1,72 @@
+<app-loading-spinner [isLoading]="this.isLoading"></app-loading-spinner>
+<app-alert #messageBox></app-alert>
+<div *ngIf="this.orders$ | async as orders">
+  <!-- Loop through each order -->
+
+  <div *ngIf="orders.length>0">
+    <div class="order-card order-container" *ngFor="let order of orders">
+      <!-- Order Summary Section -->
+      <div class="order-header">
+        <div class="order-status">
+          <h2 style="margin: 0px;">Order ID: {{ order.orderID }}</h2>
+          <span class="status-badge" [ngClass]="{
+        'delivered': order.orderStatus === 'Delivered',
+        'pending': order.orderStatus === 'Pending',
+        'cancelled': order.orderStatus === 'Cancelled'
+      }">{{ order.orderStatus }}</span>
+        </div>
+        <button type="button" (click)="cancelOrder(order.orderID)" class="cancel-order-btn"
+          *ngIf="order.orderStatus=='Pending'">Cancel Order</button>
+      </div>
+
+      <!-- Order Details Section with Address and Delivery Date -->
+      <div class="order-details-grid">
+        <div class="order-info">
+          <h3>Order Details</h3>
+          <p><strong>Order Date:</strong> {{ order.orderDate | date }}</p>
+          <p><strong>Delivery Date:</strong> {{ order.deliveryDate | date }}</p>
+          <p><strong>Total Amount:</strong> {{ getTotal(order.orderItems)| currency }}</p>
+        </div>
+        <div class="order-address">
+          <h3>Shipping Address</h3>
+          <p><strong>Address Line 1:</strong> {{ order.addressLine1 }}</p>
+          <p><strong>Address Line 2:</strong> {{ order.addressLine2 }}</p>
+          <p><strong>City:</strong> {{ order.city }}</p>
+          <p><strong>State:</strong> {{ order.state }}</p>
+          <p><strong>Postal Code:</strong> {{ order.postalCode }}</p>
+          <p><strong>Country:</strong> {{ order.country }}</p>
+        </div>
+        <div class="order-contact" *ngIf="user$| async as user">
+          <h3>Contact Information</h3>
+          <p><strong>Customer Name:</strong> {{ user.firstName }} {{user.lastName}}</p>
+          <p><strong>Email:</strong> {{ user.email }}</p>
+          <p><strong>Phone:</strong> {{ user.phoneNumber }}</p>
+        </div>
+      </div>
+
+      <!-- Products in Order Section -->
+      <div>
+        <h3>Products Ordered</h3>
+        <div class="products-container">
+          <div class="product-card" *ngFor="let orderItems of order.orderItems">
+            <img [src]="this.imageUrl+orderItems.product.fileName" alt="{{ orderItems.product.name }}"
+              class="product-image" />
+            <div class="product-details">
+              <h4>{{ orderItems.product.name }}</h4>
+              <p>{{ orderItems.product.description }}</p>
+              <p><strong>Price:</strong> {{ orderItems.product.price | currency }}</p>
+              <p><strong>Quantity:</strong> {{ orderItems.quantity }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="orders.length==0" class="empty-order">
+    <div class="empty-order-1">
+      <img src="assets/images/emptywishlist.png" />
+      <h1 *ngIf="userId!=0">You have not ordered anything</h1>
+      <h1 *ngIf="userId==0">Order Not Found!</h1>
+    </div>
+  </div>
+</div>

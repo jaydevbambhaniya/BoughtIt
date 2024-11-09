@@ -1,0 +1,12 @@
+<div class="dialog-overlay" *ngIf="this.isVisible">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <h2>{{ title }}</h2>
+      <p>{{ message }}</p>
+      <div class="dialog-buttons">
+        <button *ngFor="let button of buttons" [ngClass]="{'primary-button':button.primary}" (click)="onButtonClick(button.action)">
+          {{ button.text }}
+        </button>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,146 @@
+.logo{
+    width: 100px;
+    height: 100px;
+}
+.border-dark-subtle{
+    border: 1px solid black;
+    border-radius: 4px;
+}
+.search-form, .search-input{
+    margin: 0 0;
+}
+svg{
+    margin-right: 10px;
+}
+.icon-container {
+    display: flex;
+    align-items: center; 
+    justify-content: right; /* Optionally, center items horizontally if needed */
+    gap: 5rem; /* Add spacing between icons if desired */
+    height: 50px;
+}
+
+.icon-item {
+    position: relative; /* Ensure positioning context for .c-text */
+    display: inline-block; /* Align icon items in a row if necessary */
+}
+
+.icon-item {
+    position: relative; /* Ensure positioning context for .c-text */
+    display: inline-block; /* Align icon items in a row if necessary */
+}
+
+.cart-a,.profile-a,.wishlist-a {
+    display: block; /* Make the anchor tag behave like a block element */
+}
+
+.c-text,.p-text,.w-text {
+    position: absolute; /* Position the text absolutely within the .icon-item */
+    top: 100%; /* Position it below the .icon-item */
+    left: 50%; /* Center horizontally relative to the .icon-item */
+    transform: translateX(-50%); /* Center the div horizontally */
+    padding: 5px 10px; /* Add some padding around the text */
+    background-color: #333; /* Background color of the tooltip */
+    color: white; /* Text color */
+    border-radius: 5px; /* Rounded corners */
+    opacity: 0; /* Initially hidden */
+    visibility: hidden; /* Ensure it's not interactable */
+    transition: opacity 0.3s ease, visibility 0.3s ease; /* Smooth transition */
+    white-space: nowrap; /* Prevent the text from wrapping */
+    z-index: 10; /* Ensure the text appears above other elements */
+}
+
+.icon-item:hover .c-text, .icon-item:hover .p-text,.icon-item:hover .w-text {
+    opacity: 1;
+    visibility: visible; 
+}
+p{
+    margin: 0px !important;
+}
+.relative { position: relative; }
+    .inline-block { display: inline-block; }
+    .absolute { position: absolute; }
+    .-top-2 { top: -0.5rem; }
+    .-right-2 { right: -0.5rem; }
+    .bg-red-500 { background-color: red; }
+    .text-white { color: #ffffff; }
+    .text-xs { font-size: 1.5rem; }
+    .font-bold { font-weight: 700; }
+    .rounded-full { border-radius: 9999px; }
+    .h-5 { height: 1.75rem; }
+    .w-5 { width: 1.75rem; }
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .justify-center { justify-content: center; }
+    .mt-1 { margin-top: 0.25rem; }
+    .text-sm { font-size: 0.875rem; }
+    .text-center { text-align: center; }
+    .mt-2 { margin-top: 0.5rem; }
+    .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+    .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+    .bg-green-500 { background-color: #22c55e; }
+    .rounded { border-radius: 0.25rem; }
+    .mr-2 { margin-right: 0.5rem; }
+/* Container for profile and menu */
+.profile-container {
+    position: relative;
+}
+
+/* Profile link styles */
+.profile-a {
+    padding: 10px;
+    color: #333;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.profile-a:hover {
+    background-color: #f0f0f0;
+    border-radius: 8px;
+}
+
+/* Profile menu styling */
+.profile-menu {
+    display: none;
+    position: absolute;
+    top: 50px; /* Position below profile */
+    right: 0;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    width: 150px;
+    z-index: 1000;
+}
+
+.profile-container:hover .profile-menu {
+    display: block; /* Show menu when hovering over profile container */
+}
+
+/* Styling for menu items */
+.sub-menu {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.sub-menu:hover {
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+/* Additional styles for better visuals */
+.sub-menu:not(:last-child) {
+    margin-bottom: 8px;
+}
+
+svg {
+    fill: #333;
+    transition: fill 0.3s ease;
+}
+
+.profile-a:hover svg {
+    fill: #007bff; /* Change icon color on hover */
+}

@@ -1,0 +1,60 @@
+<app-loading-spinner [isLoading]="this.isLoading"></app-loading-spinner>
+<div>
+  <link rel="stylesheet" type="text/css" href="../../../../public/assets/css/normalize.css">
+  <link rel="stylesheet" type="text/css" href="../../../../public/assets/icomoon/icomoon.css">
+  <link rel="stylesheet" type="text/css" media="all"
+    href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="../../../../public/assets/css/vendor.css">
+  <link rel="stylesheet" type="text/css" href="../../../../public/assets/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <script src="js/modernizr.js"></script>
+
+  <div id="all" data-tab-content class="active container">
+    <div class="row d-flex flex-wrap">
+      <div *ngIf="this.wishlistItems$ | async as wishlistItems" [ngClass]="wishlistItems.length==0?'empty-wishlist':''">
+        <div *ngIf="wishlistItems.length > 0; else emptyWishlist">
+          <div *ngFor="let product of wishlistItems" class="product-item col-lg-3 col-md-6 col-sm-6">
+            <div class="image-holder">
+              <img src='{{this.fileBaseUrl}}/{{product.fileName}}' alt="Product Image" class="product-image">
+            </div>
+            <div class="cart-concern">
+              <div class="cart-button d-flex justify-content-between align-items-center">
+                <button type="button" class="btn-wrap cart-link d-flex align-items-center"
+                  (click)="addToCart(product.productId, !product.inCartlist)">
+                  {{product.inCartlist ? 'remove from cart' : 'add to cart'}} <i class="icon icon-arrow-io"></i>
+                </button>
+                <button type="button" class="view-btn tooltip d-flex">
+                  <i class="icon icon-screen-full"></i>
+                  <span class="tooltip-text">Quick view</span>
+                </button>
+                <button type="button" class="wishlist-btn"
+                  (click)="addToWishlist(product.productId, !product.inWishlist)">
+                  <i class="fa-heart red"
+                    [ngClass]="{'fa-solid': product.inWishlist, 'fa-regular': !product.inWishlist}"></i>
+                </button>
+              </div>
+            </div>
+            <div class="product-detail">
+              <h3 class="product-title">
+                <a href="single-product.html">{{product.name}}</a>
+              </h3>
+              <div class="item-price text-primary">{{product.price}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Empty Wishlist Template -->
+      <ng-template #emptyWishlist>
+          <div class="empty-wishlist-1">
+            <img src="assets/images/emptywishlist.png" />
+            <h2>Empty Wishlist</h2>
+            <span>You have no items in your wishlist. Start adding!</span>
+          </div>
+      </ng-template>
+  
+    </div>
+  </div>

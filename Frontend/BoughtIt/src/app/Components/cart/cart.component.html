@@ -1,0 +1,76 @@
+<app-loading-spinner [isLoading]="this.isLoading"></app-loading-spinner>
+<!-- <div *ngIf="this.cartItems | async as cartItems1;">
+	{{cartItems1.length}}
+  </div> -->
+<div class="container" *ngIf="!this.isLoading">
+	<div class="row">
+		<div>
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">
+						<div class="row">
+							<div class="col-xs-6">
+								<h5><span class="glyphicon glyphicon-shopping-cart"></span> Shopping Cart</h5>
+							</div>
+							<div class="col-xs-6">
+								<button type="button" class="btn btn-primary btn-sm btn-block" [routerLink]="['/home']">
+									<span class="glyphicon glyphicon-share-alt"></span> Continue shopping
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel-body">
+					<div *ngIf="this.cartProducts.length>0; else emptyCart" [ngClass]="this.cartProducts.length==0?'empty-cart':''">
+					<div *ngFor="let product of this.cartProducts">
+						<div class="row product-item">
+							<div class="col-xs-2"><img class="img-responsive" [src]="fileBaseUrl+product.fileName">
+							</div>
+							<div class="col-xs-4">
+								<h4 class="product-name"><strong>{{product.name}}</strong></h4>
+								<h4><small>{{product.description}}</small></h4>
+							</div>
+							<div class="col-xs-6">
+								<div class="col-xs-6 text-right">
+									<h6><strong>{{product.price}} <span class="text-muted">x</span></strong></h6>
+								</div>
+								<div class="col-xs-4">
+									<input type="text" class="form-control input-sm" (change)="updateQuantity(product)"
+										[value]="product.quantity" [(ngModel)]="product.quantity">
+								</div>
+								<div class="col-xs-2">
+									<button type="button" class="btn btn-link btn-xs"
+										(click)="removeProduct(product.productId)">
+										<span class="glyphicon glyphicon-trash trash-icon"> </span>
+									</button>
+								</div>
+							</div>
+							<hr />
+						</div>
+						<hr />
+					</div>
+				</div>
+				<ng-template #emptyCart>
+					<div class="empty-cart-1">
+						<img src="assets/images/emptywishlist.png" />
+						<h2>Empty Cart</h2>
+						<span>You have no items in your cart. Start adding!</span>
+					  </div>
+				</ng-template>
+				</div>
+				<div class="panel-footer" *ngIf="cartProducts.length>0">
+					<div class="row text-center">
+						<div class="col-xs-9">
+							<h4 class="text-right">Total <strong>{{getTotal() }}</strong></h4>
+						</div>
+						<div class="col-xs-3">
+							<button type="button" (click)="onPlaceOrderClick();" class="btn btn-success btn-block">
+								Proceed To Order
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

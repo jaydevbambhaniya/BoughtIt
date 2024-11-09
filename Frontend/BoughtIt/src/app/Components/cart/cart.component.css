@@ -1,0 +1,16 @@
+.trash-icon:hover{
+    color: red;
+}
+.product-item{
+    margin-bottom: 5px;
+}
+.empty-cart{
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 100px);
+    margin: auto;
+}
+.empty-cart-1 {
+text-align: center; 
+}
