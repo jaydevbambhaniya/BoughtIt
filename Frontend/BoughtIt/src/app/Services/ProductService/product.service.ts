@@ -33,7 +33,7 @@ export class ProductService {
     return this.httpClient.get(`${this.baseUrl}/getAllProducts`,{observe:'response'})
     .pipe(
       map((response:HttpResponse<any>)=>{
-        console.log(response.body);
+        
         var data = response.body as Product[];
         return data;
       }),

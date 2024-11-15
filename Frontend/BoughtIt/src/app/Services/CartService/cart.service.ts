@@ -1,8 +1,6 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { response } from 'express';
 import { catchError, map, Observable, of } from 'rxjs';
-import { BrowserStorageService } from '../BrowserStorage/browserstorage.service';
 import { CartProductDto } from '../../Models/CartProductDto';
 import { Product } from '../../Models/Product';
 import { select, Store } from '@ngrx/store';
@@ -37,7 +35,7 @@ export class CartService {
     return this.httpClient.get(`${this.baseUrl}/getUserCart?UserId=${userId}`,{observe:'response'})
     .pipe(
       map((response:HttpResponse<any>)=>{
-        console.log(response.body.data);
+        
         return response.body.data || [] as CartProductDto[];
       }),
       catchError((error)=>{
@@ -90,7 +88,7 @@ export class CartService {
     );
   }
   setProductsToCheckout(products:Product[]){
-    console.log(products);
+    
     this.products = products;
   }
   getProductsToBuy():Product[]{

@@ -9,9 +9,9 @@ export const authConfig: AuthConfig = {
   clientId: '',
 
   scope: 'openid profile email',
-
   responseType:'code',
-
+  showDebugInformation:true,
   strictDiscoveryDocumentValidation: false,
-
+  disablePKCE:false,
+  requireHttps:false
 };

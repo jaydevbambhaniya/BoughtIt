@@ -34,7 +34,7 @@ export class CartWishlistEffects {
         mergeMap(({ userId, item, isInCart }) => {
           return this.cartService.updateUserCart(userId, item, isInCart).pipe(
             tap((response) => {
-              console.log('Cart updated successfully:', response);
+              
             }),
             catchError((error) => {
               console.error('Error updating cart:', error);
@@ -68,7 +68,7 @@ export class CartWishlistEffects {
         mergeMap(({ userId, item, isInWishlist }) => {
           return this.cartService.updateUserWishlist(userId, item, isInWishlist).pipe(
             tap((response) => {
-              console.log('Cart updated successfully:', response);
+              
             }),
             catchError((error) => {
               console.error('Error updating cart:', error);

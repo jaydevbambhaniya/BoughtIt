@@ -58,19 +58,35 @@ namespace Infrastructure.Repositories
                 await _roleManager.CreateAsync(new IdentityRole<int>(role));
             }
             user.Role = role;
-            var result = await _userManager.CreateAsync(user, user.PasswordHash);
+            IdentityResult result=null;
+            if (user.IsExternalLogin==true)
+            {
+                result = await _userManager.CreateAsync(user);
+            }
+            else
+            {
+                result = await _userManager.CreateAsync(user, user.PasswordHash);
+            }
             if (!result.Succeeded)
             {
                 return new ApiResponse<object>() { StatusCode = result.Succeeded ? 1 : -1, Message = result.Succeeded ? "" : result.Errors.FirstOrDefault().Description };
             }
-            await _userManager.AddToRoleAsync(user, role);
-            return new ApiResponse<object>() { StatusCode = result.Succeeded ? 1 : -1, Message = result.Succeeded?"": result.Errors.FirstOrDefault().Description };
+            result = await _userManager.AddToRoleAsync(user, role);
+            return new ApiResponse<object>() { StatusCode = result.Succeeded ? user.Id : -1, Message = result.Succeeded?"": result.Errors.FirstOrDefault().Description };
         }
 
-        public async Task<User> GetUserDetailsAsync(int userId)
+        public async Task<User?> GetUserDetailsAsync(int? userId=null,string? email=null)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
-            return user;
+            if (userId.HasValue)
+            {
+                return await _userManager.FindByIdAsync(userId.ToString());
+            }
+            if (!string.IsNullOrEmpty(email))
+            {
+                return await _userManager.FindByEmailAsync(email);
+            }
+
+            return null;
         }
 
         public async Task<int> UpdateUserDetailsAsync(UserDto user)

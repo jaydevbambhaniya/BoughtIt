@@ -46,7 +46,7 @@ export class WishlistComponent implements OnInit {
     //     );
     //     forkJoin(productRequests).subscribe({
     //       next:async (products:(Product | null)[])=>{
-    //         console.log(products);
+    //         
     //         const productPromises = products.map(async (product) => {
     //           if(product==null)return;
     //           const [inWishlist, inCartlist] = await Promise.all([
@@ -66,7 +66,7 @@ export class WishlistComponent implements OnInit {
     //     });
     //   },
     //   error:(error)=>{
-    //     console.log(error);
+    //     
     //     this.isLoading=false;
     //   }
     // });
@@ -84,7 +84,7 @@ export class WishlistComponent implements OnInit {
     
         forkJoin(productRequests).subscribe({
           next: async (products: (Product | null)[]) => {
-            console.log(products);
+            
             const productPromises = products.map(async (product) => {
               if (product == null) return null; // Return null for non-existent products
     

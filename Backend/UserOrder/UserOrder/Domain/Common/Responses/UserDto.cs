@@ -18,5 +18,6 @@ namespace UserOrder.Domain.Common.Responses
         public string? Gender { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiry { get; set; }
+        public bool? IsExternalLogin { get; set; }
     }
 }

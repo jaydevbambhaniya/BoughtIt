@@ -1,10 +1,12 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 import { UserService } from '../../Services/UserService/user.service';
 import { FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../Common/LoadingSpinner/loading-spinner.component';
-import { ExternalAuthService } from '../../Services/ExternalAuthService/external-auth.service';
+import { OAuthService } from 'angular-oauth2-oidc';
+import { authConfig } from '../../auth-config';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -13,17 +15,31 @@ import { ExternalAuthService } from '../../Services/ExternalAuthService/external
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
   @ViewChild('loadingSpinner') loadingSpinner:LoadingSpinnerComponent
   public loginForm:FormGroup
   public alert:string;
-  constructor(private userService:UserService,private router:Router,private externalAuthService:ExternalAuthService){
+  private isBrowser:boolean=false;
+  constructor(private userService:UserService,private router:Router,private oAuthService:OAuthService,
+    @Inject(PLATFORM_ID) private platformId: object
+  ){
+    this.isBrowser = isPlatformBrowser(platformId);
     this.loginForm = new FormGroup({
       email: new FormControl('',[Validators.required,Validators.email]),
       password: new FormControl('',[Validators.required])
     });
     this.alert='';
     this.loadingSpinner = new LoadingSpinnerComponent();
+  }
+  ngOnInit(): void {
+    if(this.isBrowser){
+      this.oAuthService.configure(authConfig);
+      this.oAuthService.loadDiscoveryDocumentAndTryLogin().then(() => {
+        if (this.oAuthService.hasValidAccessToken()) {
+          console.log('already logged in');
+        }else console.log('please login');
+      });
+    }
   }
   onLoginClick(){
     if(this.loginForm.invalid)return;
@@ -38,13 +54,15 @@ export class LoginComponent {
       }else if(retVal>0){
         this.router.navigateByUrl('/home');
       }else{
-        console.log(retVal);
+        
         this.alert='Something went wrong, please try again!';
       }
     });
   }
   googleLogin(){
-    this.externalAuthService.login();
+    if (this.isBrowser) {
+      this.oAuthService.initCodeFlow(undefined,{prompt:'select_account'});
+    }
   }
   facebookLogin(){
 

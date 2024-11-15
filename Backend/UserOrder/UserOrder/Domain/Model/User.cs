@@ -18,6 +18,7 @@ namespace Domain.Model
         public string Role {  get; set; }
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiry { get; set; }
+        public bool? IsExternalLogin { get; set; } = false;
         public User() { }
     }
 }

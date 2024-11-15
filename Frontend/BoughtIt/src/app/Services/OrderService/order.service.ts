@@ -15,7 +15,7 @@ export class OrderService {
   placeOrder(order:Order):Observable<any>{
     return this.httpClient.post(`${this.baseUrl}/placeOrder`,order,{observe:'response'}).pipe(
       map((response:HttpResponse<any>)=>{
-        console.log(response.body);
+        
         return response.body;
       }),
       catchError((error)=>{
@@ -28,7 +28,7 @@ export class OrderService {
     if(orderId==0){
       return this.httpClient.get(`${this.baseUrl}/getUserOrders?UserID=${userId}`,{observe:'response'}).pipe(
         map((response:HttpResponse<any>)=>{
-          console.log(response.body);
+          
           return response.body.data;
         }),
         catchError((error)=>{
@@ -39,7 +39,7 @@ export class OrderService {
     }else{
       return this.httpClient.get(`${this.baseUrl}/getOrder?OrderID=${orderId}`,{observe:'response'}).pipe(
         map((response:HttpResponse<any>)=>{
-          console.log(response.body);
+          
           if(response.body.data!=null){
             return [response.body.data];
           }
@@ -54,11 +54,11 @@ export class OrderService {
   }
 
   cancelOrder(orderID:number):Observable<number>{
-    console.log(orderID);
+    
     return this.httpClient.delete(`${this.baseUrl}/deleteOrder`,{body:{orderID},observe:'response'})
     .pipe(
       map((response:HttpResponse<any>)=>{
-        console.log(response.body);
+        
         return response.body.data || -5;
       }),
       catchError((error)=>{

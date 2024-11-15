@@ -44,7 +44,7 @@ export class OrderComponent implements OnInit{
   ngOnInit(): void {
     this.messageBox = new AlertComponent();
     this.products = this.cartService.getProductsToBuy();
-    console.log(this.products);
+    
   }
 
   onPlaceOrderClick(){
