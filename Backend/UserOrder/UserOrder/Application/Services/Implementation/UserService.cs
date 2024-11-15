@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -49,10 +50,9 @@ namespace UserOrder.Application.Services.Implementation
             {
                 return new ApiResponse<AuthResponseDto>() { StatusCode = -2, Message = "Username or password is incorrect." };
             }
-            var refreshToken = await GenerateRefreshTokenAsync();
-            var accessToken = await GenerateJWTTokenAsync(user, user.Role);
-            var response= new AuthResponseDto() { UserID=user.Id, Tokens= new TokenDto() { AccessToken=accessToken,RefreshToken=refreshToken} };
-            await _userRepository.UpdateUserRefreshTokensAsync(user.Id, refreshToken);
+            var token = await GetUserTokens(user);
+            var response= new AuthResponseDto() { UserID=user.Id, Tokens= token };
+            await _userRepository.UpdateUserRefreshTokensAsync(user.Id, token.RefreshToken);
             return new ApiResponse<AuthResponseDto>() {StatusCode=200,Data=response};
         }
         private Task<string> GenerateRefreshTokenAsync()
@@ -163,44 +163,35 @@ namespace UserOrder.Application.Services.Implementation
 
             return principal.ClaimsIdentity;
         }
-
-        public async Task<ApiResponse<AuthResponseDto>> ExternalLoginAsync(string code)
+        private async Task<TokenDto> GetUserTokens(User? user)
         {
-            var response = await ExchangeCodeForTokensAsync(code);
-            Console.WriteLine(response);
-            return null;
+            if (user == null) return null;
+            var refreshToken = await GenerateRefreshTokenAsync();
+            var accessToken = await GenerateJWTTokenAsync(user, user.Role);
+            return new TokenDto() { AccessToken = accessToken, RefreshToken = refreshToken };
         }
-        private async Task<GoogleTokenResponse?> ExchangeCodeForTokensAsync(string code)
+        public async Task<ApiResponse<AuthResponseDto>> ExternalLoginAsync(ExternalLoginCommand userData)
         {
-            var tokenEndpoint = "https://oauth2.googleapis.com/token";
-
-            var clientId = _configuration["Authentication:Google:ClientId"];
-            var clientSecret = _configuration["Authentication:Google:ClientSecret"];
-            var redirectUri = _configuration["Authentication:Google:RedirectUri"];
-
-            Console.WriteLine($"code:{code} uri:{redirectUri}");
-
-            var requestData = new Dictionary<string, string>
+            var userInfo = _mapper.Map<GoogleUserInfo>(userData);
+            User? user = await this._userRepository.GetUserDetailsAsync(null,userData.Email);
+            Console.WriteLine(user);
+            if (user == null)
             {
-                { "code", code },
-                { "client_id", clientId },
-                { "client_secret", clientSecret },
-                { "redirect_uri", redirectUri },
-                { "grant_type", "authorization_code" }
-            };
+                //New User
+                var data = await _userRepository.CreateUserAsync(_mapper.Map<User>(userInfo));
+                Console.WriteLine($"CreatedUser: {data.StatusCode}");
 
-            var requestContent = new FormUrlEncodedContent(requestData);
-
-            var response = await _httpClient.PostAsync(tokenEndpoint, requestContent);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                Console.WriteLine(response.Content);
-                return null;
+                if (data.StatusCode <= 0)
+                {
+                    Console.WriteLine(data.Message);
+                    return new ApiResponse<AuthResponseDto>() { Data = new AuthResponseDto() { }, StatusCode = -1, Message = "Error" };
+                }
+                user = await this._userRepository.GetUserDetailsAsync(null, userData.Email);
             }
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<GoogleTokenResponse>(responseContent);
+            var tokens = await GetUserTokens(user);
+            var response = new AuthResponseDto() { Tokens = tokens, UserID = user.Id };
+            await _userRepository.UpdateUserRefreshTokensAsync(user.Id, tokens.RefreshToken);
+            return new ApiResponse<AuthResponseDto>() { Data = response, StatusCode = 200 };
         }
     }
 }

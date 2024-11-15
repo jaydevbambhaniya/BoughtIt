@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Backend/UserOrder/UserOrder/.vs/UserOrder/FileContentIndex
+/Backend/Inventory/Inventory/.vs/Inventory/FileContentIndex
+/Backend/ApiGateway/.vs/ApiGateway/FileContentIndex
+/Backend/UserOrder/UserOrder/Application/obj/Debug/net8.0
+/Backend/UserOrder/UserOrder/Infrastructure/obj/Debug/net8.0
+/Backend/UserOrder/UserOrder/UserOrder/obj/Debug/net8.0

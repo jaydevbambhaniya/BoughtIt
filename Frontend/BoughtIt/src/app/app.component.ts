@@ -24,14 +24,19 @@ export class AppComponent implements OnInit {
     this.router.events.pipe(
       filter(event=>event instanceof NavigationEnd)
     ).subscribe((event:NavigationEnd)=>{
-      if(!event.url.includes('/login') && !event.url.includes('/register') && !event.url.includes('/auth-complete')){
+      const currentUrl = event.urlAfterRedirects || event.url;
+      if(!this.isAuthRoute(currentUrl)){
         this.showNavbar=true;
         this.fetchUserCart();
         this.fetchUserWishlist();
+      }else{
+        this.showNavbar=false;
       }
     })
   }
-
+  private isAuthRoute(currentUrl:string):boolean{
+    return ['/login', '/register', '/auth-complete'].some(authPath => currentUrl.includes(authPath));
+  }
   fetchUserCart(){
     var user = JSON.parse(this.browserStorge.get('currentUser')||'') as User;
     this.store.dispatch(fetchCart({userId:user.id}));

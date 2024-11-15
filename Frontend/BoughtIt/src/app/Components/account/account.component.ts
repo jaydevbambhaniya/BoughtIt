@@ -5,9 +5,6 @@ import { CommonModule } from '@angular/common';
 import { User } from '../../Models/User';
 import { LoadingSpinnerComponent } from "../Common/LoadingSpinner/loading-spinner.component";
 import { AlertComponent } from "../Common/Alert/alert.component";
-import { title } from 'process';
-import { response } from 'express';
-
 @Component({
   selector: 'app-account',
   standalone: true,
@@ -94,11 +91,11 @@ export class AccountComponent implements OnInit {
   updateUser(){
     var user:User;
     user = this.userForm.value;
-    console.log(user);
+    
     this.isLoading=true;
     this.userService.updateUser(user).subscribe({
       next:(response:number)=>{
-        console.log(response);
+        
         this.isLoading=false;
         this.messageBox.buttons = [{text:'Okay',action:()=>{this.messageBox.hideAlert()},primary:true}];
         if(response>0)
@@ -120,7 +117,7 @@ export class AccountComponent implements OnInit {
     var userId = this.userForm.get('userId')?.value;
     var oldPassword = this.userPasswordForm.get('oldPassword')?.value;
     var newPassword = this.userPasswordForm.get('newPassword')?.value;
-    console.log(userId);
+    
     this.isLoading=true;
     this.userService.updateUserPassword(userId,oldPassword,newPassword).subscribe({
       next:(response:number)=>{

@@ -19,7 +19,7 @@ namespace UserOrder.Application.Services.Interfaces
         public Task<ApiResponse<int>> UpdateUserDetails(UserDto userDto);
         public Task<ApiResponse<int>> UpdateUserPassword(string oldPassword, string newPassword, int UserId);
         public Task<ApiResponse<TokenDto>> RefreshTokenAsync(TokenDto token);
-        public Task<ApiResponse<AuthResponseDto>> ExternalLoginAsync(string code);
+        public Task<ApiResponse<AuthResponseDto>> ExternalLoginAsync(ExternalLoginCommand userInfo);
 
     }
 }

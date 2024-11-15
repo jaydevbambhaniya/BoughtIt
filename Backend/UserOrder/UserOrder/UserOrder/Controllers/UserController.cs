@@ -55,7 +55,7 @@ namespace UserOrderAPI.Controllers
         }
 
         [HttpPost("googleLogin")]
-        public async Task<IActionResult> GoogleResponse(ExternalLoginCommand command)
+        public async Task<IActionResult> GoogleResponse([FromBody] ExternalLoginCommand command)
         {
             return Ok(await _mediator.Send(command));
         }

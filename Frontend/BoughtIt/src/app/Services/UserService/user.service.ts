@@ -5,6 +5,7 @@ import {map,catchError, switchMap} from 'rxjs/operators'
 import { User } from '../../Models/User';
 import { BrowserStorageService } from '../BrowserStorage/browserstorage.service';
 import { Router } from '@angular/router';
+import { ExternalUserInfo } from '../../Models/ExternalUserInfo';
 @Injectable({
   providedIn: 'root'
 })
@@ -19,7 +20,7 @@ export class UserService {
   }
   public logout():void{
     this.browserStorage.remove('userToken');
-    console.log('Logged Out');
+    
     this.router.navigate(['/login']);
   }
   public userLogin(username:string,password:string):Observable<number>{
@@ -45,11 +46,11 @@ export class UserService {
     return this.httpClient.post(this.baseUrl+'register',user,{observe:'response'})
     .pipe(
       map((response:HttpResponse<any>)=>{
-        console.log(response.body);
+        
         return response.body.statusCode;
       }),
       catchError((error)=>{
-        console.log(error);
+        
         return of(-10);
       })
     )
@@ -94,7 +95,7 @@ export class UserService {
     return this.httpClient.put(`${this.baseUrl}updateUserPassword`,{userId,oldPassword,password:newPassword},{observe:'response'})
     .pipe(
       map((response:HttpResponse<any>)=>{
-        console.log(response.body.data);
+        
         return response.body.data;
       }),
       catchError((error)=>{
@@ -109,7 +110,7 @@ export class UserService {
     return this.httpClient.post(`${this.baseUrl}refreshToken`,{accessToken,refreshToken},{observe:'response'})
     .pipe(
       map((response:HttpResponse<any>)=>{
-        console.log(response.body.data);
+        
         return response.body.data;
       }),
       catchError((error)=>{
@@ -121,12 +122,14 @@ export class UserService {
   saveAccessToken(token:string){
     this.browserStorage.set('userToken',token);
   }
-  externalLogin(code:string):Observable<number>{
-    return this.httpClient.post(`${this.baseUrl}googleLogin`,{code},{observe:'response'})
+  externalLogin(externalUserInfo:ExternalUserInfo):Observable<number>{
+    return this.httpClient.post(`${this.baseUrl}googleLogin`,externalUserInfo,{observe:'response'})
     .pipe(
       map((response:HttpResponse<any>)=>{
-        console.log(response.body);
-        return 1;
+        this.browserStorage.set("userToken", response.body.data.tokens.accessToken);
+        this.browserStorage.set("refreshToken", response.body.data.tokens.refreshToken);
+        this.getUserData(response.body.data.userID,true).subscribe();
+        return response.body.data.userID; 
       }),
       catchError((error)=>{
         console.log(error);

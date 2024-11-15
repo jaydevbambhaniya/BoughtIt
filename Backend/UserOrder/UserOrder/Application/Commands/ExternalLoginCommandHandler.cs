@@ -11,7 +11,9 @@ namespace UserOrder.Application.Commands
 {
     public record ExternalLoginCommand : IRequest<ApiResponse<AuthResponseDto>>
     {
-        public string? Code { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
     }
     public class ExternalLoginCommandHandler : IRequestHandler<ExternalLoginCommand, ApiResponse<AuthResponseDto>>
     {
@@ -22,7 +24,8 @@ namespace UserOrder.Application.Commands
         }
         public async Task<ApiResponse<AuthResponseDto>> Handle(ExternalLoginCommand request, CancellationToken cancellationToken)
         {
-            return await this._userService.ExternalLoginAsync(request.Code);
+
+            return await this._userService.ExternalLoginAsync(request);
         }
     }
 }

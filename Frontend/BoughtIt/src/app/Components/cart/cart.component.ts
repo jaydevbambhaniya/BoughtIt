@@ -61,7 +61,7 @@ export class CartComponent implements OnInit {
 
         forkJoin(productRequests).subscribe({
           next: (products: (Product | null)[]) => {
-            console.log(products);
+            
             this.cartProducts = products
               .filter((product): product is Product => product !== null) 
               .map((product, index) => ({

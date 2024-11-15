@@ -6,11 +6,8 @@ import { OrderService } from '../../Services/OrderService/order.service';
 import { CommonModule } from '@angular/common';
 import { User } from '../../Models/User';
 import { UserService } from '../../Services/UserService/user.service';
-import { response } from 'express';
-import { HttpResponse } from '@angular/common/http';
 import { LoadingSpinnerComponent } from "../Common/LoadingSpinner/loading-spinner.component";
 import { AlertComponent } from "../Common/Alert/alert.component";
-import { title } from 'process';
 
 
 @Component({
@@ -57,7 +54,7 @@ export class OrderdetailsComponent implements OnInit {
       next:(response:number)=>{
         this.messageBox.buttons = [{text:'Okay', action:()=>this.onOrderCancel()}];
         var message='';
-        console.log(response);
+        
         if(response==-1){
           message = "No Order found with given order id";
         }else if(response<0){
@@ -69,7 +66,7 @@ export class OrderdetailsComponent implements OnInit {
         this.messageBox.showAlert({title:'Cancel Order',message});
       },
       error:(error)=>{
-        console.log(error);
+        
         this.isLoading=false;
         this.messageBox.showAlert({title:'Cancel Order',message:'Error Ocurred!!'});
       }

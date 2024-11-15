@@ -11,7 +11,8 @@ import { provideEffects } from '@ngrx/effects';
 import { cartReducer, wishlistReducer } from './Services/StoreManagement/global.reducer';
 import {provideRouterStore, routerReducer} from '@ngrx/router-store'
 import { APIInterceptor } from './Services/Interceptor/api.interceptor';
-import { provideOAuthClient } from 'angular-oauth2-oidc';
+import { OAuthModule, OAuthService, provideOAuthClient } from 'angular-oauth2-oidc';
+import { authConfig } from './auth-config';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideClientHydration(),
