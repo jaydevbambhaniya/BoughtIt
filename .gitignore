@@ -8,3 +8,13 @@
 /Backend/UserOrder/UserOrder/Application/obj/Debug/net8.0
 /Backend/UserOrder/UserOrder/Infrastructure/obj/Debug/net8.0
 /Backend/UserOrder/UserOrder/UserOrder/obj/Debug/net8.0
+/Backend/ApiGateway/ApiGateway/appsettings.json
+/Backend/ApiGateway/ApiGateway/bin/Debug/net8.0/appsettings.json
+/Backend/Inventory/Inventory/Inventory.API/appsettings.json
+/Backend/UserOrder/UserOrder/UserOrder/appsettings.json
+/Backend/ApiGateway/ApiGateway/bin/Debug/net8.0/ApiGateway.dll
+/Backend/ApiGateway/ApiGateway/bin/Debug/net8.0/ApiGateway.exe
+/Backend/ApiGateway/ApiGateway/bin/Debug/net8.0/ApiGateway.staticwebassets.endpoints.json
+.vs/
+bin/
+obj/
