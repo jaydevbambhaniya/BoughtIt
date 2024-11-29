@@ -64,7 +64,4 @@ export class LoginComponent implements OnInit{
       this.oAuthService.initCodeFlow(undefined,{prompt:'select_account'});
     }
   }
-  facebookLogin(){
-
-  }
 }

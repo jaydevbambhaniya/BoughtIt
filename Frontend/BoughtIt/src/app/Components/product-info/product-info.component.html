@@ -1,0 +1,17 @@
+<app-loading-spinner [isLoading]="this.isLoading"></app-loading-spinner>
+<div class="product-container" *ngIf="this.product$|async as product">
+    <div class="product-image">
+        <img [src]="fileBaseUrl + '/' + product.fileName" alt="{{ product.name }}" class="product-image" />
+    </div>
+    <div class="product-details">
+      <h2>{{product.name}}</h2>
+      <p class="product-description">{{product.description}}</p>
+      <p class="product-price">Price: {{product.price | currency:'INR'}}</p>
+      <div class="button-group">
+        <button [className]="product.inCartlist?'remove-from-cart':'add-to-cart'">{{product.inCartlist?'Remove from Cart':'Add to Cart'}}</button>
+        <button [className]="product.inWishlist?'remove-from-wishlist':'add-to-wishlist'">{{product.inWishlist?'Remove from Wishlist':'Add to Wishlist'}}</button>
+      </div>
+    </div>
+  </div>
+  
+  

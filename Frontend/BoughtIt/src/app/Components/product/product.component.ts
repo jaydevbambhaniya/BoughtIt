@@ -1,24 +1,27 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../Services/ProductService/product.service';
 import { CommonModule } from '@angular/common';
 import { BrowserStorageService } from '../../Services/BrowserStorage/browserstorage.service';
 import { select, Store } from '@ngrx/store';
-import { updateCart } from '../../Services/StoreManagement/global.actions';
-import { selectIsProductInCart, selectIsProductInWishlist } from '../../Services/StoreManagement/global.selectors';
-import { Observable, firstValueFrom, of, forkJoin } from 'rxjs';
+import { Observable, firstValueFrom, of, forkJoin, BehaviorSubject, first } from 'rxjs';
 import { CartService } from '../../Services/CartService/cart.service';
+import { LoadingSpinnerComponent } from '../Common/LoadingSpinner/loading-spinner.component';
+import { Product } from '../../Models/Product';
+import { response } from 'express';
+import { ProductCardComponent } from "../product-card/product-card.component";
 
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoadingSpinnerComponent, ProductCardComponent],
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css']
 })
 export class ProductComponent {
   public searchText: string = '';
-  public productData: any[] | null = [];
+  public productItems$ = new BehaviorSubject<(Product & { inWishlist: boolean; inCartlist: boolean })[]>([]);
+  public isLoading:boolean=false;
   public wishlist: number[] = [];
   public fileBaseUrl = 'https://localhost:5000/static';
   public cartlist: number[] = [];
@@ -27,9 +30,8 @@ export class ProductComponent {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private browserService: BrowserStorageService,
-    private store: Store,
-    private cartService:CartService
+    private cartService:CartService,
+    private router:Router
   ) {}
 
   ngOnInit() {
@@ -40,26 +42,31 @@ export class ProductComponent {
   }
   async loadProducts() {
     try {
-      const products = await firstValueFrom(this.productService.getFilteredProduct(this.searchText));
-      
-      if (!products || products.length === 0) {
-        this.productData = [];
-        return;
-      }
-      const productPromises = products.map(async (product) => {
-        const [inWishlist, inCartlist] = await Promise.all([
-          firstValueFrom(this.cartService.isInWishlist(product.productId)),
-          firstValueFrom(this.cartService.isInCartlist(product.productId))
-        ]);
-
-        return {
-          ...product,
-          inWishlist,
-          inCartlist
-        };
+      this.isLoading=true;
+      this.productService.getFilteredProduct(this.searchText).subscribe({
+        next:async (products:Product[])=>{
+          if(products.length==0){
+            this.productItems$.next([]);
+            this.isLoading=false;
+            return;
+          }
+          var productPromises = products.map(async (product)=>{
+            if(!product)return null;
+            const [inWishlist,inCartlist] = await Promise.all([
+              firstValueFrom(this.cartService.isInWishlist(product.productId)),
+              firstValueFrom(this.cartService.isInCartlist(product.productId))
+            ]);
+            return {
+              ...product,
+              inWishlist,
+              inCartlist
+            }
+          });
+          var resolvedProducts = await Promise.all(productPromises);
+          this.productItems$.next(resolvedProducts.filter(p=>p!=null));
+          this.isLoading=false;
+        }
       });
-      this.productData = await Promise.all(productPromises);
-
     } catch (error) {
       console.error('Error loading products:', error);
     }
@@ -68,20 +75,23 @@ export class ProductComponent {
   addToWishlist(productId: number, flag: boolean) {
     if (productId == null) return;
     this.cartService.addToWishlist(productId,flag);
-    this.productData = this.productData?.map(product =>
-      product.productId === productId
-        ? { ...product, inWishlist: flag }
-        : product
-    ) || null;
+    var products = this.productItems$.getValue();
+    var updatedItems = products?.map(product=>
+      product.productId==productId?{...product,inWishlist:flag}:product
+    );
+    this.productItems$.next(updatedItems);
   }
-
+  productDetails(productId:number){
+    if(productId==null)return;
+    this.router.navigateByUrl('/product-info?productId='+productId);
+  }
   addToCart(productId: number, flag: boolean) {
     if (productId == null) return;
     this.cartService.addToCart(productId,1,flag);
-    this.productData = this.productData?.map(product =>
-      product.productId === productId
-        ? { ...product, inCartlist: flag }
-        : product
-    ) || null;
+    var products = this.productItems$.getValue();
+    var updatedItems = products?.map(product=>
+      product.productId==productId?{...product,inCartlist:flag}:product
+    );
+    this.productItems$.next(updatedItems);
   }
 }

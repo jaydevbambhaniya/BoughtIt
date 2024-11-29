@@ -5,7 +5,6 @@
         <button class="btn btn-google" mat-raised-button (click)="googleLogin()">
           Sign in with Google
         </button>
-      <button class="btn btn-apple" (click)="facebookLogin()">Sign in with Facebook</button>
       <p>or Login with Email</p>
       <app-loading-spinner #loadingSpinner></app-loading-spinner>
       <form method="post" [formGroup]="loginForm" (ngSubmit)="onLoginClick()">

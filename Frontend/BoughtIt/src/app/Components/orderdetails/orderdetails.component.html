@@ -25,7 +25,7 @@
           <h3>Order Details</h3>
           <p><strong>Order Date:</strong> {{ order.orderDate | date }}</p>
           <p><strong>Delivery Date:</strong> {{ order.deliveryDate | date }}</p>
-          <p><strong>Total Amount:</strong> {{ getTotal(order.orderItems)| currency }}</p>
+          <p><strong>Total Amount:</strong> {{ getTotal(order.orderItems)| currency:'INR' }}</p>
         </div>
         <div class="order-address">
           <h3>Shipping Address</h3>
@@ -54,7 +54,7 @@
             <div class="product-details">
               <h4>{{ orderItems.product.name }}</h4>
               <p>{{ orderItems.product.description }}</p>
-              <p><strong>Price:</strong> {{ orderItems.product.price | currency }}</p>
+              <p><strong>Price:</strong> {{ orderItems.product.price | currency:'INR' }}</p>
               <p><strong>Quantity:</strong> {{ orderItems.quantity }}</p>
             </div>
           </div>

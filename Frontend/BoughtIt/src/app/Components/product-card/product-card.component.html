@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../public/assets/css/style.css">
+<link rel="stylesheet" type="text/css" href="../../../../public/assets/icomoon/icomoon.css">
+<div *ngIf="product!=null" class="product-card" (click)="productDetails(product.productId)">
+    <div class="image-container">
+      <img [src]="fileBaseUrl + '/' + product.fileName" alt="{{ product.name }}" class="product-image" />
+      <div class="hover-icons">
+        <button 
+          class="btn-wrap cart-link d-flex align-items-center" 
+          (click)="addToCart(product.productId, !product.inCartlist); $event.stopPropagation();" 
+          aria-label="Add to Cart">{{product.inCartlist?'remove from cart':'Add to cart'}}<i class="icon icon-arrow-io"></i>
+        </button>
+        <button 
+        class="btn-wrap cart-link d-flex align-items-center" 
+          (click)="addToWishlist(product.productId, !product.inWishlist); $event.stopPropagation();" 
+          aria-label="Add to Wishlist">
+          <i [class]="product.inWishlist ? 'fa fa-heart' : 'fa fa-heart-o'"></i>
+        </button>
+      </div>
+    </div>
+    <div class="product-info">
+      <h3 class="product-title">{{ product.name }}</h3>
+      <div class="product-price">{{ product.price | currency:'INR' }}</div>
+    </div>
+  </div>

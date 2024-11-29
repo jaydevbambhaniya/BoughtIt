@@ -105,7 +105,7 @@ export class AccountComponent implements OnInit {
         }
       },
       error:(error)=>{
-        console.log(error);
+        console.error(error);
         this.isLoading=false;
         this.messageBox.buttons = [{text:'Okay',action:()=>{this.messageBox.hideAlert()},primary:true}];
         this.messageBox.showAlert({title:'User',message:'Error Ocurred, please try again!'});

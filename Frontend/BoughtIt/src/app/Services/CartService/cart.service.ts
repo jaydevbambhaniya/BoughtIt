@@ -51,7 +51,7 @@ export class CartService {
     return this.httpClient.get(`${this.baseUrl}/getUserWishlist?UserId=${userId}`,{observe:'response'})
     .pipe(
       map((response:HttpResponse<any>)=>{
-        return response.body.data as number[];
+        return response.body.data||[] as number[];
       }),
       catchError((error)=>{
         console.log(error);

@@ -9,9 +9,9 @@ export const APIInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(UserService);  
   let isRefreshing = false;
   const refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-
+  const backendApiUrl = 'https://localhost:5000';
   let authToken = authService.getUserToken();
-  if (authToken) {
+  if (authToken && req.url.startsWith(backendApiUrl)) {
     req = addTokenHeader(req, authToken);
   }
   return next(req).pipe(
@@ -46,7 +46,7 @@ function handle401Error(
         return next(addTokenHeader(req, token.accessToken));
       }),
       catchError((err) => {
-        console.log(err);
+        console.error(err);
         authService.logout();
         return throwError(() => err);
       })
