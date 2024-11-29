@@ -12,9 +12,9 @@ import { OrderdetailsComponent } from './Components/orderdetails/orderdetails.co
 import { AccountComponent } from './Components/account/account.component';
 import { authGuard } from './Services/AuthGuard/auth.guard';
 import { AuthCompleteComponent } from './Components/auth-complete/auth-complete.component';
+import { ProductInfoComponent } from './Components/product-info/product-info.component';
 
 export const routes: Routes = [
-    // {path:'', redirectTo:'login', pathMatch:'full'},
     {path:'login',component:LoginComponent},
     {path:'register', component:RegisterComponent},
     {path:'home', component:HomeComponent, canActivate:[authGuard]},
@@ -26,5 +26,6 @@ export const routes: Routes = [
     {path:'user',component:AccountComponent, canActivate:[authGuard]},
     {path:'userOrders',component:OrderdetailsComponent, canActivate:[authGuard]},
     {path:'auth-complete',component:AuthCompleteComponent},
+    {path:'product-info',component:ProductInfoComponent},
     {path:'**', redirectTo:'login'}
 ];

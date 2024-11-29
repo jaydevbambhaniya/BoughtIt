@@ -29,17 +29,16 @@ export class ProductService {
     );
   }
   
-  getAllProducts():Observable<Product[]|null>{
+  getAllProducts():Observable<Product[]>{
     return this.httpClient.get(`${this.baseUrl}/getAllProducts`,{observe:'response'})
     .pipe(
       map((response:HttpResponse<any>)=>{
-        
-        var data = response.body as Product[];
+        var data = response.body || [] as Product[];
         return data;
       }),
       catchError((error)=>{
         console.log(error);
-        return of(null);
+        return of([]);
       })
     );
   }
@@ -49,17 +48,18 @@ export class ProductService {
   deleteProduct(productId:number):Observable<boolean>{
     return of(false);
   }
-  getFilteredProduct(searchText:string):Observable<Product[]|null>{
+  getFilteredProduct(searchText:string):Observable<Product[]>{
     if(searchText=='')return this.getAllProducts();
     return this.httpClient.get(`${this.baseUrl}/getFilteredProducts?SearchTerm=${searchText}`,{observe:'response'})
     .pipe(
       map((response:HttpResponse<any>)=>{
         var data = response.body.data as Product[];
+        if(data==null)data=[];
         return data;
       }),
       catchError((error)=>{
         console.log(error);
-        return of(null);
+        return of([]);
       })
     );
   }

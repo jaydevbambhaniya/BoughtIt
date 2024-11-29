@@ -10,5 +10,4 @@ import { Component, Input } from '@angular/core';
 })
 export class LoadingSpinnerComponent {
   @Input() isLoading:boolean = false;
-  // public isLoading:boolean=false;
 }

@@ -1,0 +1,130 @@
+/* General Reset */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
+}
+
+/* Container Styling */
+.product-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  max-width: 1000px;
+  margin: 50px auto;
+  padding: 40px;
+  border: 2px solid #ddd;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+/* Image Styling */
+.product-image img {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 15px;
+  object-fit: cover;
+  margin-bottom: 30px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Details Section Styling */
+.product-details h1 {
+  font-size: 3rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.product-description {
+  font-size: 1.5rem;
+  color: #666;
+  margin-bottom: 20px;
+  line-height: 1.8;
+}
+
+.product-price {
+  font-size: 2rem;
+  color: #007bff;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.product-price span {
+  color: #ff5722;
+}
+
+/* Button Group Styling */
+.button-group {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* Add to Cart Button */
+.add-to-cart {
+  background-color: #28a745;
+  color: #ffffff;
+  border: none;
+  padding: 15px 25px;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-to-cart:hover {
+  background-color: #218838;
+}
+
+/* Remove from Cart Button */
+.remove-from-cart {
+  background-color: #dc3545;
+  color: #ffffff;
+  border: none;
+  padding: 15px 25px;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.remove-from-cart:hover {
+  background-color: #c82333;
+}
+
+/* Add to Wishlist Button */
+.add-to-wishlist {
+  background-color: #ffc107;
+  color: #000000;
+  border: none;
+  padding: 15px 25px;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-to-wishlist:hover {
+  background-color: #e0a800;
+}
+
+/* Remove from Wishlist Button */
+.remove-from-wishlist {
+  background-color: #6c757d;
+  color: #ffffff;
+  border: none;
+  padding: 15px 25px;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.remove-from-wishlist:hover {
+  background-color: #5a6268;
+}

@@ -27,12 +27,16 @@ export class UserService {
     return this.httpClient.post(this.baseUrl + 'login', { username, password }, { observe: 'response' })
     .pipe(
       map((response: HttpResponse<any>) => {
-        this.browserStorage.set("userToken", response.body.data.tokens.accessToken);
-        this.browserStorage.set("refreshToken", response.body.data.tokens.refreshToken);
-        return response.body.data.userID; 
+        if(response.body.statusCode>0){
+          this.browserStorage.set("userToken", response.body.data.tokens.accessToken);
+          this.browserStorage.set("refreshToken", response.body.data.tokens.refreshToken);
+          return response.body.data.userID; 
+        }else{
+          return response.body.data.statusCode;
+        }
       }),
       switchMap((userID: number) => {
-        return this.getUserData(userID).pipe(
+        return this.getUserData(userID,true).pipe(
           map(() => userID)
         );
       }),

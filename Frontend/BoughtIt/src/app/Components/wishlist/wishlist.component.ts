@@ -7,11 +7,12 @@ import { BrowserStorageService } from '../../Services/BrowserStorage/browserstor
 import { CartService } from '../../Services/CartService/cart.service';
 import { ProductService } from '../../Services/ProductService/product.service';
 import { BehaviorSubject, firstValueFrom, forkJoin } from 'rxjs';
+import { ProductCardComponent } from "../product-card/product-card.component";
 
 @Component({
   selector: 'app-wishlist',
   standalone: true,
-  imports: [LoadingSpinnerComponent,FormsModule,CommonModule],
+  imports: [LoadingSpinnerComponent, FormsModule, CommonModule, ProductCardComponent],
   templateUrl: './wishlist.component.html',
   styleUrl: './wishlist.component.css'
 })
@@ -35,46 +36,11 @@ export class WishlistComponent implements OnInit {
     }
     const user = JSON.parse(userData);
     this.isLoading=true;
-    // this.wishlistService.getUserWishlist(user.id).subscribe({
-    //   next: (wishlistItems:number[])=>{
-    //     if (wishlistItems.length === 0) {
-    //       this.isLoading = false;
-    //       return;
-    //     }
-    //     const productRequests = wishlistItems.map(item => 
-    //       this.productService.getProductById(item)
-    //     );
-    //     forkJoin(productRequests).subscribe({
-    //       next:async (products:(Product | null)[])=>{
-    //         
-    //         const productPromises = products.map(async (product) => {
-    //           if(product==null)return;
-    //           const [inWishlist, inCartlist] = await Promise.all([
-    //             firstValueFrom(this.wishlistService.isInWishlist(product.productId)),
-    //             firstValueFrom(this.wishlistService.isInCartlist(product.productId))
-    //           ]);
-      
-    //           return {
-    //             ...product,
-    //             inWishlist,
-    //             inCartlist
-    //           };
-    //         });
-    //         this.wishlistItems = await Promise.all(productPromises)
-    //         this.isLoading = false;
-    //       }
-    //     });
-    //   },
-    //   error:(error)=>{
-    //     
-    //     this.isLoading=false;
-    //   }
-    // });
     this.wishlistService.getUserWishlist(user.id).subscribe({
       next: (wishlistItems: number[]) => {
         if (wishlistItems.length === 0) {
           this.isLoading = false;
-          this.wishlistItems$.next([]); // Emit an empty array if no items
+          this.wishlistItems$.next([]);
           return;
         }
     
@@ -86,7 +52,7 @@ export class WishlistComponent implements OnInit {
           next: async (products: (Product | null)[]) => {
             
             const productPromises = products.map(async (product) => {
-              if (product == null) return null; // Return null for non-existent products
+              if (product == null) return null;
     
               const [inWishlist, inCartlist] = await Promise.all([
                 firstValueFrom(this.wishlistService.isInWishlist(product.productId)),
@@ -101,7 +67,7 @@ export class WishlistComponent implements OnInit {
             });
     
             const resolvedProducts = await Promise.all(productPromises);
-            this.wishlistItems$.next(resolvedProducts.filter(p => p !== null)); // Emit only valid products
+            this.wishlistItems$.next(resolvedProducts.filter(p => p !== null)); 
             this.isLoading = false;
           }
         });
@@ -109,7 +75,7 @@ export class WishlistComponent implements OnInit {
       error: (error) => {
         console.log(error);
         this.isLoading = false;
-        this.wishlistItems$.next(null); // Emit null on error
+        this.wishlistItems$.next(null);
       }
     });
   }
