@@ -36,11 +36,11 @@
           <p><strong>Postal Code:</strong> {{ order.postalCode }}</p>
           <p><strong>Country:</strong> {{ order.country }}</p>
         </div>
-        <div class="order-contact" *ngIf="user$| async as user">
+        <div class="order-contact">
           <h3>Contact Information</h3>
-          <p><strong>Customer Name:</strong> {{ user.firstName }} {{user.lastName}}</p>
-          <p><strong>Email:</strong> {{ user.email }}</p>
-          <p><strong>Phone:</strong> {{ user.phoneNumber }}</p>
+          <p><strong>Customer Name:</strong> {{ order.firstName }} {{order.lastName}}</p>
+          <p><strong>Email:</strong> {{ order.email }}</p>
+          <p><strong>Phone:</strong> {{ order.phoneNumber }}</p>
         </div>
       </div>
 

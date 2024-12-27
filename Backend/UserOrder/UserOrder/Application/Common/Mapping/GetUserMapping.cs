@@ -14,8 +14,7 @@ namespace UserOrder.Application.Common.Mapping
     {
         public GetUserMapping() {
             CreateMap<User, UserDto>();
-            CreateMap<UpdateUserCommand, UserDto>()
-                .ForMember(dest=>dest.Id,opt=>opt.MapFrom(src=>src.UserId)).ReverseMap();
+            CreateMap<UpdateUserCommand, UserDto>();
             CreateMap<RefreshTokenCommand, TokenDto>().ReverseMap();
         } 
     }

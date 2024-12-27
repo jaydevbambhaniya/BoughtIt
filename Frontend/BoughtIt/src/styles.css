@@ -1,1 +1,36 @@
-/* You can add global styles to this file, and also import other style files */
+/* Ensure parent container is styled correctly */
+div {
+    position: relative;
+  }
+  
+  /* Input field styling */
+  input {
+    width: 100%;
+    padding-right: 2.5rem; /* Add space for the toggle button */
+    box-sizing: border-box;
+    line-height: 1.5;
+  }
+  
+  /* Toggle button styling */
+  .password-toggle-btn {
+    position: absolute;
+    right: 10px; /* Adjust space from the right */
+    top: 50%; /* Position at the center vertically */
+    transform: translateY(-50%); /* Adjust to align perfectly in the center */
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: none; /* Hidden by default */
+  }
+  
+  .password-toggle-btn .material-icons {
+    font-size: 20px; /* Adjust size of the eye icon */
+    color: #666; /* Adjust color for better visibility */
+  }
+  
+  /* Show toggle button on focus */
+  input:focus ~ .password-toggle-btn,
+  .password-toggle-btn:focus {
+    display: block;
+  }
+  

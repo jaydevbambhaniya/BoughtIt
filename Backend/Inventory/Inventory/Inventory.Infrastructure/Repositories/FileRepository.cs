@@ -1,4 +1,6 @@
-﻿using Domain.Repositories;
+﻿using Domain.Common;
+using Domain.Common.Resources;
+using Domain.Repositories;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -25,15 +27,18 @@ namespace Infrastructure.Repositories
         {
             if (file == null || file.Length == 0)
             {
-                throw new ArgumentException("File is required.");
+                var error = ErrorCodes.GetError("FILE_NOT_PROVIDED");
+                throw new CustomException(error.Code,error.Message);
             }
             if (!IsValidFileType(file, fileType))
             {
-                throw new ArgumentException($"Invalid file type. Expected {fileType} files.");
+                var error = ErrorCodes.GetError("INVALID_FILE_TYPE");
+                throw new CustomException(error.Code,error.Message);
             }
             if (file.Length > maxSizeAllowed)
             {
-                throw new ArgumentException($"File size exceeds the maximum allowed size of {maxSizeAllowed} bytes.");
+                var error = ErrorCodes.GetError("FILE_LIMIT");
+                throw new CustomException(error.Code,error.Message);
             }
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
             var filePath = Path.Combine(_baseDirectory, fileType, fileName);
@@ -44,7 +49,6 @@ namespace Infrastructure.Repositories
             {
                 await file.CopyToAsync(stream);
             }
-            Console.WriteLine(Path.Combine(fileType, fileName));
             return Path.Combine(fileType, fileName);
         }
 
@@ -52,8 +56,8 @@ namespace Infrastructure.Repositories
         {
             var allowedExtensions = fileType switch
             {
-                "image" => new[] { ".jpg", ".jpeg", ".png", ".gif" },
-                "document" => new[] { ".pdf", ".doc", ".docx", ".txt" },
+                "image" => [".jpg", ".jpeg", ".png", ".gif"],
+                "document" => [".pdf", ".doc", ".docx", ".txt"],
                 _ => Array.Empty<string>()
             };
 

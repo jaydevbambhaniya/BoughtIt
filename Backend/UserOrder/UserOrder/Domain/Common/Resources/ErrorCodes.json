@@ -1,0 +1,38 @@
+{
+  "USER_NOT_FOUND": {
+    "Code": -1,
+    "Message": "Unable to find user with given username"
+  },
+  "INVALID_CREDENTIALS": {
+    "Code": -2,
+    "Message": "Invalid credentials, Please try again."
+  },
+  "WRONG_PASSWORD": {
+    "Code": -3,
+    "Message": "Old password is incorrect!"
+  },
+  "INVALID_AUTH_TOKENS": {
+    "Code": -4,
+    "Message": "Invalid Access token or Refresh token."
+  },
+  "INVALID_REFRESH_TOKEN": {
+    "Code": -5,
+    "Message": "Invalid Refresh token."
+  },
+  "ORDER_NOT_FOUND": {
+    "Code": -6,
+    "Message": "Order Not Found."
+  },
+  "SERVER_ERROR": {
+    "Code": -100,
+    "Message": "Something went wrong, Please try again later."
+  },
+  "VALIDATION_ERROR": {
+    "Code": -101,
+    "Message": "" 
+  },
+  "CUSTOM_ERROR": {
+    "Code": -107,
+    "Message": ""
+  }
+}

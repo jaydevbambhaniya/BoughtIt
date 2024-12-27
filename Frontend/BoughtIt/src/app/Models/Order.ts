@@ -8,6 +8,10 @@ export class OrderItem{
 }
 export class Order{
     userID: number = 0;
+    firstName: string ='';
+    lastName: string='';
+    email: string='';
+    phoneNumber: string='';
     orderItems: OrderItem[]=[];
     addressLine1:string='';
     addressLine2:string='';
@@ -28,6 +32,10 @@ export class OrderItemDto{
 export class OrderDto{
     userID: number = 0;
     orderItems: OrderItemDto[]=[];
+    firstName: string ='';
+    lastName: string='';
+    email: string='';
+    phoneNumber: string='';
     addressLine1:string='';
     addressLine2:string='';
     orderDate: string='';

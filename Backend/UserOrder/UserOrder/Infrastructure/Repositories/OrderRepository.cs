@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UserOrder.Application.Responses;
+using UserOrder.Domain.Common;
+using UserOrder.Domain.Common.Resources;
 using UserOrder.Domain.Common.Responses;
 using UserOrder.Domain.Model;
 using UserOrder.Domain.Repository;
@@ -25,7 +27,7 @@ namespace UserOrder.Infrastructure.Repositories
             var order = boughtItDbContext.Orders.Where(ord=>ord.OrderId == OrderID).FirstOrDefault();
             if (order == null)
             {
-                return -1; // No record found
+                return ErrorCodes.GetError("ORDER_NOT_FOUND").Code; // No record found
             }
             boughtItDbContext.Remove(order);
             return await boughtItDbContext.SaveChangesAsync();
@@ -65,7 +67,7 @@ namespace UserOrder.Infrastructure.Repositories
             int ret = await boughtItDbContext.SaveChangesAsync();
             if (ret == 0)
             {
-                return new PlacedOrderDto() { OrderID = -1, OrderStatus = "Failed"};
+                return new PlacedOrderDto() { OrderID = ErrorCodes.GetError("SERVER_ERROR").Code, OrderStatus = "Failed"};
             }
             return new PlacedOrderDto() { OrderID = order.OrderId, OrderStatus = "Pending" };
         }
@@ -75,7 +77,7 @@ namespace UserOrder.Infrastructure.Repositories
             var existingOrder = await boughtItDbContext.Orders.Include(ord=>ord.OrderItems)
                                             .ThenInclude(oi=>oi.Product)
                                             .FirstOrDefaultAsync(ord=>ord.OrderId==order.OrderId);  
-            if(existingOrder == null)throw new Exception($"No Order found for given OrderId: {order.OrderId}");
+            if(existingOrder == null)throw new CustomException(ErrorCodes.GetError("ORDER_NOT_FOUND").Code,$"No Order found for given OrderId: {order.OrderId}");
 
             boughtItDbContext.Entry(existingOrder).CurrentValues.SetValues(order);
             Console.WriteLine(existingOrder);

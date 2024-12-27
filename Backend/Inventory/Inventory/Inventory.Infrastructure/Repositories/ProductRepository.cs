@@ -1,4 +1,5 @@
 ﻿using Application.Common.Responses;
+using Domain.Common.Resources;
 using Domain.Model;
 using Domain.Repositories;
 using Infrastructure.Data;
@@ -27,7 +28,6 @@ namespace Infrastructure.Repositories
             product.FileName = await _fileRepository.UploadFileAsync(product.ProductImage,"image",2*1024*1024);
             await _boughtItDbContext.Products.AddAsync(product);
             int x = await _boughtItDbContext.SaveChangesAsync();
-            Console.WriteLine(x);
             return product;
         }
 
@@ -36,7 +36,7 @@ namespace Infrastructure.Repositories
             var product = _boughtItDbContext.Products.Where(prd=>prd.ProductId == productId).FirstOrDefault();
             if (product == null)
             {
-                return (-1,"");
+                return (ErrorCodes.GetError("PRODUCT_NOT_FOUND").Code,"");
             }
             await _fileRepository.DeleteFileAsync(product.FileName);
             _boughtItDbContext.Products.Remove(product);
@@ -66,7 +66,7 @@ namespace Infrastructure.Repositories
             var existingProduct = await _boughtItDbContext.Products.FirstOrDefaultAsync(p=>p.ProductId == product.ProductId);
             if (existingProduct == null)
             {
-                return -1;
+                return ErrorCodes.GetError("PRODUCT_NOT_FOUND").Code;
             }
             _boughtItDbContext.Entry(existingProduct).CurrentValues.SetValues(product);
             return await _boughtItDbContext.SaveChangesAsync();

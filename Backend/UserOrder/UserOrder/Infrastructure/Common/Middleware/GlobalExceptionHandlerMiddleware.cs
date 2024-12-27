@@ -9,6 +9,8 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using UserOrder.Application.Responses;
+using UserOrder.Domain.Common;
+using UserOrder.Domain.Common.Resources;
 
 namespace UserOrder.Infrastructure.Common.Middleware
 {
@@ -28,6 +30,10 @@ namespace UserOrder.Infrastructure.Common.Middleware
             {
                 await _next(context);
             }
+            catch(CustomException ex)
+            {
+                await HandleCustomException(context, ex);
+            }
             catch (ValidationException ex)
             {
                 _logger.LogError(ex,ex.Message);
@@ -39,12 +45,22 @@ namespace UserOrder.Infrastructure.Common.Middleware
                 _logger.LogError(ex,ex.Message);
             }
         }
-        private static Task HandleExceptionAsync(HttpContext context, Exception ex)
+        private static Task HandleCustomException(HttpContext context, CustomException ex)
         {
             var response = new ApiResponse<object>()
             {
+                StatusCode = ex.Code,
+                Message = ex.Message
+            };
+            return context.Response.WriteAsync(JsonConvert.SerializeObject(response));
+        }
+        private static Task HandleExceptionAsync(HttpContext context, Exception ex)
+        {
+            var error = ErrorCodes.GetError("SERVER_ERROR");
+            var response = new ApiResponse<object>()
+            {
                 Message = ex.Message,
-                StatusCode = -2
+                StatusCode = error.Code
             };
 
             return context.Response.WriteAsync(JsonConvert.SerializeObject(response));
@@ -52,10 +68,11 @@ namespace UserOrder.Infrastructure.Common.Middleware
 
         private static Task HandleValidationExceptionAsync(HttpContext context, ValidationException ex)
         {
+            var error = ErrorCodes.GetError("VALIDATION_ERROR");
             var response = new ApiResponse<object>()
             {
                 Message = ex.Message,
-                StatusCode = -1
+                StatusCode = error.Code
             };
 
             return context.Response.WriteAsync(JsonConvert.SerializeObject(response));

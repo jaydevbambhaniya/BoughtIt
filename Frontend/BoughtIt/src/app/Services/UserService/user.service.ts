@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { of,Observable } from 'rxjs';
-import {map,catchError, switchMap} from 'rxjs/operators'
+import {map,catchError, switchMap, filter} from 'rxjs/operators'
 import { User } from '../../Models/User';
 import { BrowserStorageService } from '../BrowserStorage/browserstorage.service';
 import { Router } from '@angular/router';
@@ -10,6 +10,7 @@ import { ExternalUserInfo } from '../../Models/ExternalUserInfo';
   providedIn: 'root'
 })
 export class UserService {
+  private serverError=-100;
   private baseUrl='https://localhost:5000/user/';
   constructor(private httpClient:HttpClient,private browserStorage:BrowserStorageService,private router:Router) { }
   public getUserToken():string|null{
@@ -32,17 +33,18 @@ export class UserService {
           this.browserStorage.set("refreshToken", response.body.data.tokens.refreshToken);
           return response.body.data.userID; 
         }else{
-          return response.body.data.statusCode;
+          return response.body.statusCode;
         }
       }),
       switchMap((userID: number) => {
+        if(userID<0)return of(userID);
         return this.getUserData(userID,true).pipe(
           map(() => userID)
         );
       }),
       catchError((error) => {
         console.error(error);
-        return of(-10);
+        return of(this.serverError);
       })
     );
   }
@@ -50,12 +52,11 @@ export class UserService {
     return this.httpClient.post(this.baseUrl+'register',user,{observe:'response'})
     .pipe(
       map((response:HttpResponse<any>)=>{
-        
         return response.body.statusCode;
       }),
       catchError((error)=>{
-        
-        return of(-10);
+        console.error(error)
+        return of(this.serverError);
       })
     )
   }
@@ -83,14 +84,14 @@ export class UserService {
     return this.httpClient.put(`${this.baseUrl}updateUserDetails`,user,{observe:'response'})
     .pipe(
       map((response:HttpResponse<any>)=>{
-        if(response.body.data as number==1){
+        if(response.body.statusCode as number>0){
           this.getUserData(user.id,true).subscribe();
         }
-        return response.body.data;
+        return response.body.statusCode;
       }),
       catchError((error)=>{
         console.log(error);
-        return of(-5);
+        return of(this.serverError);
       })
     )
   }
@@ -104,7 +105,7 @@ export class UserService {
       }),
       catchError((error)=>{
         console.log(error);
-        return of(-5);
+        return of(this.serverError);
       })
     )
   }
@@ -137,7 +138,7 @@ export class UserService {
       }),
       catchError((error)=>{
         console.log(error);
-        return of(-10);
+        return of(this.serverError);
       })
     )
   }

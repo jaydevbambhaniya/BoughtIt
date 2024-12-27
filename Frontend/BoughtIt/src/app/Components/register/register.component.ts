@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from "../Common/LoadingSpinner/loading-spinner.component";
 import { AlertComponent } from "../Common/Alert/alert.component";
-import { MessageButtonType } from '../Common/Alert/Message';
+import { ErrorCodes } from '../../error-codes';
 
 @Component({
   selector: 'app-register',
@@ -82,7 +82,7 @@ export class RegisterComponent implements AfterViewInit{
         this.messageBox.buttons = [{ text: 'Login', primary: true, action: () => this.navigateToLogin() }];
         this.messageBox.showAlert({title:"Message",message:"Registered"});
       }else{
-        this.alert = 'There was some issue,please try again!';
+        this.alert = ErrorCodes[`${retVal}`].message;
       }
     });
   }
