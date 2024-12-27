@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { User } from '../../Models/User';
 import { LoadingSpinnerComponent } from "../Common/LoadingSpinner/loading-spinner.component";
 import { AlertComponent } from "../Common/Alert/alert.component";
+import { ErrorCodes } from '../../error-codes';
 @Component({
   selector: 'app-account',
   standalone: true,
@@ -19,7 +20,8 @@ export class AccountComponent implements OnInit {
   public userPasswordForm!:FormGroup;
   constructor(private userService:UserService){
     this.userForm = new FormGroup({
-      userId: new FormControl(-1,[]),
+      id: new FormControl(-1,[]),
+      role: new FormControl('',[]),
       firstName: new FormControl('',[Validators.required]),
       lastName: new FormControl('',[Validators.required]),
       gender: new FormControl('',[Validators.required]),
@@ -36,7 +38,7 @@ export class AccountComponent implements OnInit {
   }
 
   passwordMatchValidator: ValidatorFn = (group: AbstractControl): {[key: string]: any} | null => {
-    const password = group.get('password');
+    const password = group.get('newPassword');
     const confirmPassword = group.get('confirmPassword');
     return password && confirmPassword && password.value !== confirmPassword.value
       ? { 'passwordMismatch': true }
@@ -74,7 +76,7 @@ export class AccountComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getUserData().subscribe({
       next:(user:User|null)=>{
-        this.userForm.get('userId')?.setValue(user?.id);
+        this.userForm.get('id')?.setValue(user?.id);
         this.userForm.get('firstName')?.setValue(user?.firstName);
         this.userForm.get('lastName')?.setValue(user?.lastName);
         this.userForm.get('email')?.setValue(user?.email);
@@ -82,7 +84,7 @@ export class AccountComponent implements OnInit {
         this.userForm.get('gender')?.setValue(user?.gender);
       },
       error:(error)=>{
-        console.log(error);
+        console.error(error);
       }
     })
   }
@@ -91,7 +93,6 @@ export class AccountComponent implements OnInit {
   updateUser(){
     var user:User;
     user = this.userForm.value;
-    
     this.isLoading=true;
     this.userService.updateUser(user).subscribe({
       next:(response:number)=>{
@@ -101,7 +102,7 @@ export class AccountComponent implements OnInit {
         if(response>0)
           this.messageBox.showAlert({title:'User',message:'User Details Updated Successfully!'});
         else if(response<0){
-          this.messageBox.showAlert({title:'User',message:'Something went wrong, please try again!'});
+          this.messageBox.showAlert({title:'User',message:ErrorCodes[`${response}`].message});
         }
       },
       error:(error)=>{
@@ -114,7 +115,7 @@ export class AccountComponent implements OnInit {
   }
 
   updateUserPassword(){
-    var userId = this.userForm.get('userId')?.value;
+    var userId = this.userForm.get('id')?.value;
     var oldPassword = this.userPasswordForm.get('oldPassword')?.value;
     var newPassword = this.userPasswordForm.get('newPassword')?.value;
     
@@ -125,10 +126,8 @@ export class AccountComponent implements OnInit {
         this.messageBox.buttons = [{text:'Okay',action:()=>{this.messageBox.hideAlert()},primary:true}];
         if(response>0){
           this.messageBox.showAlert({title:'User Password',message:'Password changed successfully!'})
-        }else if(response==-10){
-          this.messageBox.showAlert({title:'User Password',message:'Old password is incorrect!'});
         }else{
-          this.messageBox.showAlert({title:'User Password',message:'Something went wrong, please try again!'})
+          this.messageBox.showAlert({title:'User Password',message:ErrorCodes[`${response}`].message})
         }
       },
       error:(error)=>{

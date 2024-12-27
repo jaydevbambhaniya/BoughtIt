@@ -100,7 +100,7 @@ export class CartComponent implements OnInit {
     var productDto = new CartProductDto();
     productDto.productId=product.productId;
     productDto.quantity = product.quantity;
-    this.store.dispatch(updateCart({userId:this.userData.id,item:product,isInCart:true}));
+    this.store.dispatch(updateCart({userId:this.userData.id,item:productDto,isInCart:true}));
   }
   onPlaceOrderClick(){
     this.cartService.setProductsToCheckout(this.cartProducts);

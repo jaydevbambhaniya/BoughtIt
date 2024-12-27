@@ -19,7 +19,6 @@ import { ProductCardComponent } from "../product-card/product-card.component";
 export class WishlistComponent implements OnInit {
   public isLoading:boolean =false;
   public wishlistItems$ =new BehaviorSubject<(Product & { inWishlist: boolean; inCartlist: boolean })[] | null>(null);
-  public fileBaseUrl = 'https://localhost:5000/static/';
   public errorMessage='';
   constructor(private browserStorage:BrowserStorageService,private wishlistService:CartService,
     private productService:ProductService
@@ -78,26 +77,5 @@ export class WishlistComponent implements OnInit {
         this.wishlistItems$.next(null);
       }
     });
-  }
-  addToWishlist(productId: number, flag: boolean) {
-    if (productId == null) return;
-    this.wishlistService.addToWishlist(productId, flag);
-    const currentItems = this.wishlistItems$.getValue();
-    const updatedItems = currentItems?.map(product =>
-      product.productId === productId
-        ? { ...product, inWishlist: flag }
-        : product
-    ) || null;
-    this.wishlistItems$.next(updatedItems);
-  }
-  addToCart(productId:number,flag:boolean){
-    if (productId == null) return;
-    this.wishlistService.addToCart(productId,1,flag);
-    const currentItems = this.wishlistItems$.getValue();
-    const updatedItems = currentItems?.map(product=>
-      product.productId === productId?{...product,inCartlist:flag}
-      :product
-    )||null;
-    this.wishlistItems$.next(updatedItems);
   }
 }

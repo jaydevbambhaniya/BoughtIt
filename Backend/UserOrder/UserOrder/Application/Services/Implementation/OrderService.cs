@@ -26,8 +26,7 @@ namespace UserOrder.Application.Services.Implementation
             string message = "Order Deleted Successfully.";
             if (ret == 0) {
                 message = "Unable to delete order!";
-            }else if (ret == -1)
-            {
+            }else if (ret == -6){
                 message = "No order found for given OrderID!";
             }
             return new ApiResponse<int>() { StatusCode = 200,Data=ret, Message = message };

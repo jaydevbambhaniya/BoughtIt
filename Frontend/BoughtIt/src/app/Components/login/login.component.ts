@@ -7,6 +7,7 @@ import { LoadingSpinnerComponent } from '../Common/LoadingSpinner/loading-spinne
 import { OAuthService } from 'angular-oauth2-oidc';
 import { authConfig } from '../../auth-config';
 import { isPlatformBrowser } from '@angular/common';
+import { ErrorCodes } from '../../error-codes';
 
 @Component({
   selector: 'app-login',
@@ -47,15 +48,10 @@ export class LoginComponent implements OnInit{
     this.loadingSpinner.isLoading=true;
     this.userService.userLogin(email,password).subscribe((retVal:number)=>{
       this.loadingSpinner.isLoading=false;
-      if(retVal==-1){
-        this.alert='User with given username doesn\'t exists!';
-      }else if(retVal==-2){
-        this.alert='Username or password is incorrect!';
-      }else if(retVal>0){
+      if(retVal>0){
         this.router.navigateByUrl('/home');
       }else{
-        
-        this.alert='Something went wrong, please try again!';
+        this.alert=ErrorCodes[`${retVal}`].message;
       }
     });
   }

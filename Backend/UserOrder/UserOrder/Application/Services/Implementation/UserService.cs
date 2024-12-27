@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using UserOrder.Application.Commands;
 using UserOrder.Application.Responses;
 using UserOrder.Application.Services.Interfaces;
+using UserOrder.Domain.Common.Resources;
 using UserOrder.Domain.Common.Responses;
 using UserOrder.Domain.Model;
 
@@ -44,11 +45,13 @@ namespace UserOrder.Application.Services.Implementation
             var (user,isSuccessful) = await _userRepository.AuthenticateAsync(username, password);
             if (user == null)
             {
-                return new ApiResponse<AuthResponseDto>() { StatusCode = -1, Message = "Unable to find user with given username" };
+                var error = ErrorCodes.GetError("USER_NOT_FOUND");
+                return new ApiResponse<AuthResponseDto>() { StatusCode = error.Code, Message = error.Message };
             }
             else if (!isSuccessful)
             {
-                return new ApiResponse<AuthResponseDto>() { StatusCode = -2, Message = "Username or password is incorrect." };
+                var error = ErrorCodes.GetError("INVALID_CREDENTIALS");
+                return new ApiResponse<AuthResponseDto>() { StatusCode = error.Code, Message = error.Message };
             }
             var token = await GetUserTokens(user);
             var response= new AuthResponseDto() { UserID=user.Id, Tokens= token };
@@ -95,7 +98,8 @@ namespace UserOrder.Application.Services.Implementation
             var user =  await _userRepository.GetUserDetailsAsync(userId);
             if (user == null)
             {
-                return new ApiResponse<UserDto>() { StatusCode = -1, Message = "No User Found!" };
+                var error = ErrorCodes.GetError("USER_NOT_FOUND");
+                return new ApiResponse<UserDto>() { StatusCode = error.Code, Message = error.Message };
             }
             return new ApiResponse<UserDto>() { Data = _mapper.Map<UserDto>(user) };
         }
@@ -103,7 +107,7 @@ namespace UserOrder.Application.Services.Implementation
         public async Task<ApiResponse<int>> UpdateUserDetails(UserDto userDto)
         {
             var response = await _userRepository.UpdateUserDetailsAsync(userDto);
-            return new ApiResponse<int>() { Data=response};
+            return new ApiResponse<int>() { StatusCode=response};
         }
 
         public async Task<ApiResponse<int>> UpdateUserPassword(string oldPassword, string newPassword, int UserId)
@@ -118,16 +122,18 @@ namespace UserOrder.Application.Services.Implementation
             var principal = await GetPrincipalFromExpiredToken(token.AccessToken);
             if(principal == null)
             {
-                response.StatusCode = -100;
-                response.Message = "Invalid Access token or refresh token";
+                var error = ErrorCodes.GetError("INVALID_AUTH_TOKENS");
+                response.StatusCode = error.Code;
+                response.Message = error.Message;
                 return response;
             }
             var userId = principal.FindFirst("UserId")?.Value;
             var user = await _userRepository.GetUserDetailsAsync(Convert.ToInt32(userId));
             if (user == null || !await ValidateRefreshTokenAsync(user, token.RefreshToken))
             {
-                response.StatusCode = -100;
-                response.Message = "Invalid Refresh token";
+                var error = ErrorCodes.GetError("INVALID_REFRESH_TOKEN");
+                response.StatusCode = error.Code;
+                response.Message = error.Message;
                 return response;
             }
 
@@ -174,17 +180,14 @@ namespace UserOrder.Application.Services.Implementation
         {
             var userInfo = _mapper.Map<GoogleUserInfo>(userData);
             User? user = await this._userRepository.GetUserDetailsAsync(null,userData.Email);
-            Console.WriteLine(user);
             if (user == null)
             {
                 //New User
                 var data = await _userRepository.CreateUserAsync(_mapper.Map<User>(userInfo));
-                Console.WriteLine($"CreatedUser: {data.StatusCode}");
 
                 if (data.StatusCode <= 0)
                 {
-                    Console.WriteLine(data.Message);
-                    return new ApiResponse<AuthResponseDto>() { Data = new AuthResponseDto() { }, StatusCode = -1, Message = "Error" };
+                    return new ApiResponse<AuthResponseDto>() {StatusCode = data.StatusCode, Message = data.Message };
                 }
                 user = await this._userRepository.GetUserDetailsAsync(null, userData.Email);
             }

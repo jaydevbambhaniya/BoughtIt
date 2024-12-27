@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UserOrder.Application.Responses;
+using UserOrder.Domain.Common.Resources;
 using UserOrder.Domain.Common.Responses;
 using UserOrder.Domain.Model;
 
@@ -69,10 +70,10 @@ namespace Infrastructure.Repositories
             }
             if (!result.Succeeded)
             {
-                return new ApiResponse<object>() { StatusCode = result.Succeeded ? 1 : -1, Message = result.Succeeded ? "" : result.Errors.FirstOrDefault().Description };
+                return new ApiResponse<object>() { StatusCode = result.Succeeded ? 1 : ErrorCodes.GetError("SERVER_ERROR").Code, Message = result.Succeeded ? "" : result.Errors.FirstOrDefault().Description };
             }
             result = await _userManager.AddToRoleAsync(user, role);
-            return new ApiResponse<object>() { StatusCode = result.Succeeded ? user.Id : -1, Message = result.Succeeded?"": result.Errors.FirstOrDefault().Description };
+            return new ApiResponse<object>() { StatusCode = result.Succeeded ? user.Id : ErrorCodes.GetError("SERVER_ERROR").Code, Message = result.Succeeded?"": result.Errors.FirstOrDefault().Description };
         }
 
         public async Task<User?> GetUserDetailsAsync(int? userId=null,string? email=null)
@@ -92,13 +93,17 @@ namespace Infrastructure.Repositories
         public async Task<int> UpdateUserDetailsAsync(UserDto user)
         {
             var data = await _userManager.FindByIdAsync(user.Id.ToString());
+            if (data == null)
+            {
+                return ErrorCodes.GetError("USER_NOT_FOUND").Code;
+            }
             data.FirstName = user.FirstName;
             data.LastName = user.LastName;
             data.Email = user.Email;
             data.PhoneNumber = user.PhoneNumber;
             data.Gender = user.Gender;
             var result = await _userManager.UpdateAsync(data);
-            return result.Succeeded ? 1 : -1;
+            return result.Succeeded ? 1 : ErrorCodes.GetError("SERVER_ERROR").Code;
         }
         public async Task<bool> UpdateUserRefreshTokensAsync(int userId,string refreshToken)
         {
@@ -115,11 +120,10 @@ namespace Infrastructure.Repositories
             bool isOldPasswordCorrect = await _userManager.CheckPasswordAsync(user, OldPassword);
             if (!isOldPasswordCorrect)
             {
-                return -10;
+                return ErrorCodes.GetError("WRONG_PASSWORD").Code;
             }
             var result = await _userManager.ChangePasswordAsync(user, OldPassword, NewPassword);
-            Console.WriteLine(result.Errors.FirstOrDefault());
-            return result.Succeeded? 1 : -1;
+            return result.Succeeded? 1 : ErrorCodes.GetError("SERVER_ERROR").Code;
         }
     }
 }

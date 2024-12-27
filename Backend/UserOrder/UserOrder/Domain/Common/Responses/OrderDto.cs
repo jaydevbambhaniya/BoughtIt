@@ -15,6 +15,10 @@ namespace UserOrder.Domain.Common.Responses
         public string OrderStatus { get; set; }
         public ICollection<OrderItemDto> OrderItems { get; set; }
         public int UserID { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? Email { get; set; }
+        public string? PhoneNumber { get; set; }
         public DateTime DeliveryDate { get; set; }
         public string? AddressLine1 { get; set; }
         public string? AddressLine2 { get; set; }

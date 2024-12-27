@@ -71,27 +71,4 @@ export class ProductComponent {
       console.error('Error loading products:', error);
     }
   }
-
-  addToWishlist(productId: number, flag: boolean) {
-    if (productId == null) return;
-    this.cartService.addToWishlist(productId,flag);
-    var products = this.productItems$.getValue();
-    var updatedItems = products?.map(product=>
-      product.productId==productId?{...product,inWishlist:flag}:product
-    );
-    this.productItems$.next(updatedItems);
-  }
-  productDetails(productId:number){
-    if(productId==null)return;
-    this.router.navigateByUrl('/product-info?productId='+productId);
-  }
-  addToCart(productId: number, flag: boolean) {
-    if (productId == null) return;
-    this.cartService.addToCart(productId,1,flag);
-    var products = this.productItems$.getValue();
-    var updatedItems = products?.map(product=>
-      product.productId==productId?{...product,inCartlist:flag}:product
-    );
-    this.productItems$.next(updatedItems);
-  }
 }

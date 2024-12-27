@@ -2,6 +2,7 @@
 using Application.Common.Responses;
 using Application.Services.Interfaces;
 using AutoMapper;
+using Domain.Common.Resources;
 using Domain.Model;
 using Domain.Repositories;
 using System;
@@ -65,7 +66,7 @@ namespace Application.Services.Implementation
             {
                 msg = "Unable to Update the product";
             }
-            else if (response == -1)
+            else if (response == ErrorCodes.GetError("PRODUCT_NOT_FOUND").Code)
             {
                 msg = $"Product with Product ID {product.ProductId} does not exists";
             }

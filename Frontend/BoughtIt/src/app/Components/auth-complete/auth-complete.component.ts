@@ -33,7 +33,6 @@ export class AuthCompleteComponent implements OnInit {
           var externalUserInfo = new ExternalUserInfo();
           externalUserInfo = {firstName:data["given_name"],lastName:data["family_name"],email:data["email"]};
           this.userService.externalLogin(externalUserInfo).subscribe((response)=>{
-            
             if(response>0)this.router.navigateByUrl("/home");
             else this.router.navigateByUrl("/login");
           })

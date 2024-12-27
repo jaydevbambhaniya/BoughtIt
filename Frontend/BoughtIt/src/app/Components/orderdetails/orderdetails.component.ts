@@ -8,6 +8,7 @@ import { User } from '../../Models/User';
 import { UserService } from '../../Services/UserService/user.service';
 import { LoadingSpinnerComponent } from "../Common/LoadingSpinner/loading-spinner.component";
 import { AlertComponent } from "../Common/Alert/alert.component";
+import { ErrorCodes } from '../../error-codes';
 
 
 @Component({
@@ -22,7 +23,6 @@ export class OrderdetailsComponent implements OnInit {
   public userId: number=0;
   public orderId: number=0;
   public orders$:Observable<OrderDto[]> = of([]);
-  public user$!:Observable<User |null>;
   public imageUrl='https://localhost:5000/static/';
   public isLoading:boolean=false;
   constructor(private route:ActivatedRoute,
@@ -35,11 +35,7 @@ export class OrderdetailsComponent implements OnInit {
       this.userId = params['userId'] || 0;
       this.orderId = params['orderId'] || 0;
       this.loadUserOrders();
-      this.fetchUser();
     });
-  }
-  fetchUser(){
-    this.user$ = this.userService.getUserData();
   }
   loadUserOrders(){
     this.orders$ = this.orderService.getUserOrders(this.userId,this.orderId);
@@ -54,11 +50,8 @@ export class OrderdetailsComponent implements OnInit {
       next:(response:number)=>{
         this.messageBox.buttons = [{text:'Okay', action:()=>this.onOrderCancel()}];
         var message='';
-        
-        if(response==-1){
-          message = "No Order found with given order id";
-        }else if(response<0){
-          message = "Error Occurred!!";
+        if(response<0){
+          message = ErrorCodes[`${response}`].message;
         }else{
           message = "Order Cancelled!!"
         }

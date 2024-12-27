@@ -10,6 +10,7 @@ import { BrowserStorageService } from '../../Services/BrowserStorage/browserstor
 import { User } from '../../Models/User';
 import { AlertComponent } from '../Common/Alert/alert.component';
 import { LoadingSpinnerComponent } from "../Common/LoadingSpinner/loading-spinner.component";
+import { ErrorCodes } from '../../error-codes';
 
 @Component({
   selector: 'app-order',
@@ -69,6 +70,10 @@ export class OrderComponent implements OnInit{
       orderItems.push(orderItem);
     });
     order.orderItems = orderItems;
+    order.firstName = this.orderForm.get('firstname')?.value;
+    order.lastName = this.orderForm.get('lastname')?.value;
+    order.email = this.orderForm.get('email')?.value;
+    order.phoneNumber = this.orderForm.get('phone')?.value;
     order.addressLine1 = this.orderForm.get('addressLine1')?.value;
     order.addressLine2 = this.orderForm.get('addressLine2')?.value;
     order.city = this.orderForm.get('city')?.value;
@@ -84,11 +89,11 @@ export class OrderComponent implements OnInit{
           this.messageBox.showAlert({title:'Order', message:'Order Placed successfully.'});
         }else{
           this.messageBox.buttons = [{ text: 'Okay', primary: true, action: () => this.messageBox.hideAlert() }];
-          this.messageBox.showAlert({title:'Order', message:'Error occurred! please try again after some time.'});
+          this.messageBox.showAlert({title:'Order', message:ErrorCodes[`${response.orderID}`].message});
         }
       },
       error:(error)=>{
-        console.log(error);
+        console.error(error);
         this.isLoading=false;
       }
     });

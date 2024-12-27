@@ -1,0 +1,30 @@
+{
+  "PRODUCT_NOT_FOUND": {
+    "Code": -51,
+    "Message": "Product does not exist."
+  },
+  "FILE_NOT_PROVIDED": {
+    "Code": -52,
+    "Message": "File is required."
+  },
+  "INVALID_FILE_TYPE": {
+    "Code": -53,
+    "Message": "File type not supported."
+  },
+  "FILE_LIMIT": {
+    "Code": -54,
+    "Message": "File size is more than 2MB"
+  },
+  "SERVER_ERROR": {
+    "Code": -100,
+    "Message": "Something went wrong, Please try again later."
+  },
+  "VALIDATION_ERROR": {
+    "Code": -101,
+    "Message": "" //Passed with exception
+  },
+  "CUSTOM_ERROR": {
+    "Code": -107,
+    "Message": "" // Passed with exception
+  }
+}
