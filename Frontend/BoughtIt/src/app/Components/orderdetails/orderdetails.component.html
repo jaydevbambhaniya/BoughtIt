@@ -24,7 +24,7 @@
         <div class="order-info">
           <h3>Order Details</h3>
           <p><strong>Order Date:</strong> {{ order.orderDate | date }}</p>
-          <p><strong>Delivery Date:</strong> {{ order.deliveryDate | date }}</p>
+          <p><strong>Delivery Date:</strong> {{ order.deliveryDate? (order.deliveryDate | date):'--' }}</p>
           <p><strong>Total Amount:</strong> {{ getTotal(order.orderItems)| currency:'INR' }}</p>
         </div>
         <div class="order-address">
