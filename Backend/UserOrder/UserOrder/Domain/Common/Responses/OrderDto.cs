@@ -19,7 +19,7 @@ namespace UserOrder.Domain.Common.Responses
         public string? LastName { get; set; }
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
-        public DateTime DeliveryDate { get; set; }
+        public DateTime? DeliveryDate { get; set; }
         public string? AddressLine1 { get; set; }
         public string? AddressLine2 { get; set; }
         public string? District { get; set; }
@@ -27,6 +27,5 @@ namespace UserOrder.Domain.Common.Responses
         public string? State { get; set; }
         public string? PostalCode { get; set; }
         public string? Country { get; set; }
-
     }
 }
