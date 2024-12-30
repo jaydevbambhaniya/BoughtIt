@@ -274,9 +274,6 @@ namespace UserOrder.Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DeliveryDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("District")
                         .HasColumnType("nvarchar(max)");
 
